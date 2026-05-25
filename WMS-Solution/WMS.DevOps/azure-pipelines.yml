@@ -33,7 +33,7 @@ stages:
           - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
-              versionSpec: 22.x
+              version: 22.x
 
           - bash: |
               set -e
@@ -101,7 +101,7 @@ stages:
           - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
-              versionSpec: 22.x
+              version: 22.x
 
           - bash: |
               set -e
@@ -178,7 +178,7 @@ stages:
           - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
-              versionSpec: 22.x
+              version: 22.x
 
           - bash: |
               set -e

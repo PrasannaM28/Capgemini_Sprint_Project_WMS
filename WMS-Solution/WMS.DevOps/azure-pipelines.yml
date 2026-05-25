@@ -62,16 +62,20 @@ stages:
           - script: dotnet restore "$(apiProjectPath)"
             displayName: Restore API project
 
-          - script: npm ci
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm ci
             displayName: Install Angular dependencies
-            workingDirectory: $(frontendProjectPath)
 
           - script: dotnet build "$(apiProjectPath)" --configuration $(buildConfiguration) --no-restore
             displayName: Build .NET solution
 
-          - script: npm run build -- --configuration production
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm run build -- --configuration production
             displayName: Build Angular app
-            workingDirectory: $(frontendProjectPath)
 
   - stage: Test
     displayName: Test automation
@@ -120,9 +124,11 @@ stages:
           - script: dotnet restore "$(testProjectPath)"
             displayName: Restore test project
 
-          - script: npm ci
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm ci
             displayName: Install Angular dependencies
-            workingDirectory: $(frontendProjectPath)
 
           - script: dotnet test "$(testProjectPath)" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
             displayName: Run .NET tests
@@ -136,9 +142,11 @@ stages:
               searchFolder: $(Agent.TempDirectory)/TestResults
               failTaskOnFailedTests: true
 
-          - script: npm run test -- --watch=false
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm run test -- --watch=false
             displayName: Run Angular tests
-            workingDirectory: $(frontendProjectPath)
 
   - stage: Package
     displayName: Package artifacts
@@ -187,13 +195,17 @@ stages:
           - script: dotnet restore "$(apiProjectPath)"
             displayName: Restore API project
 
-          - script: npm ci
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm ci
             displayName: Install Angular dependencies
-            workingDirectory: $(frontendProjectPath)
 
-          - script: npm run build -- --configuration production
+          - bash: |
+              set -e
+              cd "$(frontendProjectPath)"
+              npm run build -- --configuration production
             displayName: Build Angular app for release
-            workingDirectory: $(frontendProjectPath)
 
           - script: dotnet publish "$(apiProjectPath)" --configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/api" --no-restore
             displayName: Publish API

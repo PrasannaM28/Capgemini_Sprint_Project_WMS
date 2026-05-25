@@ -9,9 +9,9 @@ This folder contains the Azure DevOps YAML needed for production-ready CI/CD.
 
 ## What the CI pipeline does
 
-1. Restores the full .NET solution.
+1. Restores the API and test projects directly.
 2. Installs Angular dependencies with `npm ci`.
-3. Builds the .NET solution and Angular application.
+3. Builds the API project and Angular application.
 4. Runs automated tests for the API test project and Angular unit tests.
 5. Publishes deployable artifacts for the API and frontend.
 

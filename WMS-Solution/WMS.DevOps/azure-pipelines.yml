@@ -10,7 +10,6 @@ pr:
 
 variables:
   buildConfiguration: Release
-  solutionPath: ''
   apiProjectPath: ''
   frontendProjectPath: ''
   frontendDistPath: ''
@@ -40,7 +39,6 @@ stages:
               set -e
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
@@ -49,7 +47,6 @@ stages:
               fi
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
@@ -62,14 +59,14 @@ stages:
               exit 1
             displayName: Detect solution layout
 
-          - script: dotnet restore "$(solutionPath)"
-            displayName: Restore .NET solution
+          - script: dotnet restore "$(apiProjectPath)"
+            displayName: Restore API project
 
           - script: npm ci
             displayName: Install Angular dependencies
             workingDirectory: $(frontendProjectPath)
 
-          - script: dotnet build "$(solutionPath)" --configuration $(buildConfiguration) --no-restore
+          - script: dotnet build "$(apiProjectPath)" --configuration $(buildConfiguration) --no-restore
             displayName: Build .NET solution
 
           - script: npm run build -- --configuration production
@@ -100,7 +97,6 @@ stages:
               set -e
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
@@ -109,7 +105,6 @@ stages:
               fi
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
@@ -122,8 +117,8 @@ stages:
               exit 1
             displayName: Detect solution layout
 
-          - script: dotnet restore "$(solutionPath)"
-            displayName: Restore .NET solution
+          - script: dotnet restore "$(testProjectPath)"
+            displayName: Restore test project
 
           - script: npm ci
             displayName: Install Angular dependencies
@@ -169,7 +164,6 @@ stages:
               set -e
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
@@ -178,7 +172,6 @@ stages:
               fi
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
-                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
                 echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
                 echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
@@ -191,8 +184,8 @@ stages:
               exit 1
             displayName: Detect solution layout
 
-          - script: dotnet restore "$(solutionPath)"
-            displayName: Restore .NET solution
+          - script: dotnet restore "$(apiProjectPath)"
+            displayName: Restore API project
 
           - script: npm ci
             displayName: Install Angular dependencies

@@ -2,78 +2,93 @@ trigger: none
 
 resources:
   pipelines:
-  - pipeline: ci
-    source: WorkforceManagementSystem
-    trigger: true
-        branches:
-          include:
-            - main
+    - pipeline: ci
+      source: WorkforceManagementSystem
+      trigger: true
+
+pool:
+  vmImage: ubuntu-latest
 
 stages:
-  - stage: DeployApi
-    displayName: Deploy API to Azure App Service
-    jobs:
-      - deployment: DeployApi
-        displayName: Deploy API
-        environment: wms-production-api
-        pool:
-          vmImage: ubuntu-latest
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: none
 
-                - download: WMS_CI
-                  artifact: api-drop
+# =====================================
+# BACKEND DEPLOYMENT
+# =====================================
 
-                - bash: |
-                    set -e
-                    mkdir -p "$(Pipeline.Workspace)/api-drop"
-                    cp -R "$(Pipeline.Workspace)/WMS_CI/api-drop/." "$(Pipeline.Workspace)/api-drop/"
-                    cd "$(Pipeline.Workspace)/api-drop"
-                    zip -r wms-api.zip .
-                  displayName: Package API artifact
+- stage: Deploy_Backend
 
-                - task: AzureWebApp@1
-                  displayName: Deploy API to wms-api-prasanna
-                  inputs:
-                    azureSubscription: 'wms-service-connection'
-                    appType: webApp
-                    appName: 'wms-api-prasanna'
-                    package: $(Pipeline.Workspace)/api-drop/**/*.zip
+  displayName: Deploy Backend API
 
-  - stage: DeployFrontend
-    displayName: Deploy Angular frontend to Azure App Service
-    dependsOn: DeployApi
-    jobs:
-      - deployment: DeployFrontend
-        displayName: Deploy frontend
-        environment: wms-production-web
-        pool:
-          vmImage: ubuntu-latest
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: none
+  jobs:
 
-                - download: WMS_CI
-                  artifact: frontend-drop
+    - deployment: DeployBackend
 
-                - task: CopyFiles@2
-                  displayName: Stage Angular production artifact
-                  inputs:
-                    SourceFolder: $(Pipeline.Workspace)/WMS_CI/frontend-drop
-                    Contents: '**'
-                    TargetFolder: $(Pipeline.Workspace)/frontend-drop
+      displayName: Deploy Backend
 
-                - task: AzureWebApp@1
-                  displayName: Deploy frontend to wms-frontend-prasanna
-                  inputs:
-                    azureSubscription: 'wms-service-connection'
-                    appType: webAppLinux
-                    appName: 'wms-frontend-prasanna'
-                    runtimeStack: 'NODE|22-lts'
-                    startUpCommand: 'pm2 serve /home/site/wwwroot --no-daemon --spa'
-                    package: $(Pipeline.Workspace)/frontend-drop
+      environment: wms-production-api
+
+      strategy:
+
+        runOnce:
+
+          deploy:
+
+            steps:
+
+              - download: ci
+
+                artifact: api-drop
+
+              - task: AzureWebApp@1
+
+                displayName: Deploy Backend App Service
+
+                inputs:
+
+                  azureSubscription: 'wms-service-connection'
+
+                  appName: 'wms-api-prasanna'
+
+                  package: '$(Pipeline.Workspace)/ci/api-drop/**/*.zip'
+
+# =====================================
+# FRONTEND DEPLOYMENT
+# =====================================
+
+- stage: Deploy_Frontend
+
+  displayName: Deploy Angular Frontend
+
+  dependsOn: Deploy_Backend
+
+  jobs:
+
+    - deployment: DeployFrontend
+
+      displayName: Deploy Frontend
+
+      environment: wms-production-web
+
+      strategy:
+
+        runOnce:
+
+          deploy:
+
+            steps:
+
+              - download: ci
+
+                artifact: frontend-drop
+
+              - task: AzureWebApp@1
+
+                displayName: Deploy Frontend App Service
+
+                inputs:
+
+                  azureSubscription: 'wms-service-connection'
+
+                  appName: 'wms-frontend-prasanna'
+
+                  package: '$(Pipeline.Workspace)/ci/frontend-drop'

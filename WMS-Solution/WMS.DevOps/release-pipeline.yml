@@ -1,0 +1,64 @@
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: ci
+      source: WMS-CI
+      trigger:
+        branches:
+          include:
+            - main
+
+variables:
+  azureSubscriptionServiceConnection: Replace-With-Your-Service-Connection
+  apiAppServiceName: Replace-With-Your-Api-App-Service-Name
+  staticWebAppDeploymentToken: Replace-With-Your-Static-Web-App-Token
+
+stages:
+  - stage: DeployApi
+    displayName: Deploy API to Azure App Service
+    jobs:
+      - deployment: DeployApi
+        displayName: Deploy API
+        environment: wms-production-api
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: ci
+                  artifact: api-drop
+
+                - task: AzureWebApp@1
+                  displayName: Deploy API package
+                  inputs:
+                    azureSubscription: $(azureSubscriptionServiceConnection)
+                    appName: $(apiAppServiceName)
+                    package: $(Pipeline.Workspace)/ci/api-drop
+
+  - stage: DeployFrontend
+    displayName: Deploy Angular to Azure Static Web Apps
+    dependsOn: DeployApi
+    jobs:
+      - deployment: DeployFrontend
+        displayName: Deploy frontend
+        environment: wms-production-web
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: ci
+                  artifact: frontend-drop
+
+                - task: AzureStaticWebApp@0
+                  displayName: Deploy frontend package
+                  inputs:
+                    azure_static_web_apps_api_token: $(staticWebAppDeploymentToken)
+                    app_location: $(Pipeline.Workspace)/ci/frontend-drop
+                    api_location: ""
+                    output_location: ""
+                    skip_app_build: true
+                    skip_api_build: true

@@ -1,0 +1,146 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  buildConfiguration: Release
+  solutionPath: WMS-Solution.slnx
+  apiProjectPath: WMS.API/WMS.API.csproj
+  frontendProjectPath: WMS.Frontend
+  frontendDistPath: WMS.Frontend/dist/wms-frontend
+
+stages:
+  - stage: Build
+    displayName: Build solutions
+    jobs:
+      - job: Build
+        displayName: Build API and Angular app
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: UseDotNet@2
+            displayName: Use .NET 8 SDK
+            inputs:
+              packageType: sdk
+              version: 8.0.x
+
+          - task: NodeTool@0
+            displayName: Use Node.js 22
+            inputs:
+              versionSpec: 22.x
+
+          - script: dotnet restore "$(solutionPath)"
+            displayName: Restore .NET solution
+
+          - script: npm ci
+            displayName: Install Angular dependencies
+            workingDirectory: $(frontendProjectPath)
+
+          - script: dotnet build "$(solutionPath)" --configuration $(buildConfiguration) --no-restore
+            displayName: Build .NET solution
+
+          - script: npm run build -- --configuration production
+            displayName: Build Angular app
+            workingDirectory: $(frontendProjectPath)
+
+  - stage: Test
+    displayName: Test automation
+    dependsOn: Build
+    jobs:
+      - job: Test
+        displayName: Run API and Angular tests
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: UseDotNet@2
+            displayName: Use .NET 8 SDK
+            inputs:
+              packageType: sdk
+              version: 8.0.x
+
+          - task: NodeTool@0
+            displayName: Use Node.js 22
+            inputs:
+              versionSpec: 22.x
+
+          - script: dotnet restore "$(solutionPath)"
+            displayName: Restore .NET solution
+
+          - script: npm ci
+            displayName: Install Angular dependencies
+            workingDirectory: $(frontendProjectPath)
+
+          - script: dotnet test "WMS.Tests/WMS.Tests.csproj" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
+            displayName: Run .NET tests
+
+          - task: PublishTestResults@2
+            displayName: Publish .NET test results
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: "**/*.trx"
+              searchFolder: $(Agent.TempDirectory)/TestResults
+              failTaskOnFailedTests: true
+
+          - script: npm run test -- --watch=false
+            displayName: Run Angular tests
+            workingDirectory: $(frontendProjectPath)
+
+  - stage: Package
+    displayName: Package artifacts
+    dependsOn: Test
+    jobs:
+      - job: Package
+        displayName: Publish API and frontend artifacts
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: UseDotNet@2
+            displayName: Use .NET 8 SDK
+            inputs:
+              packageType: sdk
+              version: 8.0.x
+
+          - task: NodeTool@0
+            displayName: Use Node.js 22
+            inputs:
+              versionSpec: 22.x
+
+          - script: dotnet restore "$(solutionPath)"
+            displayName: Restore .NET solution
+
+          - script: npm ci
+            displayName: Install Angular dependencies
+            workingDirectory: $(frontendProjectPath)
+
+          - script: npm run build -- --configuration production
+            displayName: Build Angular app for release
+            workingDirectory: $(frontendProjectPath)
+
+          - script: dotnet publish "$(apiProjectPath)" --configuration $(buildConfiguration) --output "$(Build.ArtifactStagingDirectory)/api" --no-restore
+            displayName: Publish API
+
+          - task: CopyFiles@2
+            displayName: Stage Angular output
+            inputs:
+              SourceFolder: $(frontendDistPath)
+              Contents: "**"
+              TargetFolder: "$(Build.ArtifactStagingDirectory)/frontend"
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish API artifact
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/api"
+              artifact: api-drop
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Angular artifact
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/frontend"
+              artifact: frontend-drop

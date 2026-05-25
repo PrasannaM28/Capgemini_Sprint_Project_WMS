@@ -49,7 +49,7 @@ stages:
 
                   appName: 'wms-api-prasanna'
 
-                  package: '$(Pipeline.Workspace)/ci/api-drop/**/*.zip'
+                  package: '$(Pipeline.Workspace)/ci/api-drop'
 
 # =====================================
 # FRONTEND DEPLOYMENT

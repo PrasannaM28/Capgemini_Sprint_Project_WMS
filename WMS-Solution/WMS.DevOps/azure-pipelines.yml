@@ -10,10 +10,10 @@ pr:
 
 variables:
   buildConfiguration: Release
-  solutionPath: WMS-Solution.slnx
-  apiProjectPath: WMS.API/WMS.API.csproj
-  frontendProjectPath: WMS.Frontend
-  frontendDistPath: WMS.Frontend/dist/wms-frontend
+  solutionPath: WMS-Solution/WMS-Solution.slnx
+  apiProjectPath: WMS-Solution/WMS.API/WMS.API.csproj
+  frontendProjectPath: WMS-Solution/WMS.Frontend
+  frontendDistPath: WMS-Solution/WMS.Frontend/dist/wms-frontend
 
 stages:
   - stage: Build
@@ -30,7 +30,7 @@ stages:
               packageType: sdk
               version: 8.0.x
 
-          - task: NodeTool@0
+          - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
@@ -64,7 +64,7 @@ stages:
               packageType: sdk
               version: 8.0.x
 
-          - task: NodeTool@0
+          - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
@@ -76,7 +76,7 @@ stages:
             displayName: Install Angular dependencies
             workingDirectory: $(frontendProjectPath)
 
-          - script: dotnet test "WMS.Tests/WMS.Tests.csproj" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
+          - script: dotnet test "WMS-Solution/WMS.Tests/WMS.Tests.csproj" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
             displayName: Run .NET tests
 
           - task: PublishTestResults@2
@@ -107,7 +107,7 @@ stages:
               packageType: sdk
               version: 8.0.x
 
-          - task: NodeTool@0
+          - task: UseNode@1
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x

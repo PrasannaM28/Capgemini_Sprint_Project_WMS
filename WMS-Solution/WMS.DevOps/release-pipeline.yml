@@ -9,11 +9,6 @@ resources:
           include:
             - main
 
-variables:
-  azureSubscriptionServiceConnection: Replace-With-Your-Service-Connection
-  apiAppServiceName: Replace-With-Your-Api-App-Service-Name
-  staticWebAppDeploymentToken: Replace-With-Your-Static-Web-App-Token
-
 stages:
   - stage: DeployApi
     displayName: Deploy API to Azure App Service
@@ -27,18 +22,29 @@ stages:
           runOnce:
             deploy:
               steps:
+                - download: none
+
                 - download: ci
                   artifact: api-drop
 
+                - bash: |
+                    set -e
+                    mkdir -p "$(Pipeline.Workspace)/api-drop"
+                    cp -R "$(Pipeline.Workspace)/ci/api-drop/." "$(Pipeline.Workspace)/api-drop/"
+                    cd "$(Pipeline.Workspace)/api-drop"
+                    zip -r wms-api.zip .
+                  displayName: Package API artifact
+
                 - task: AzureWebApp@1
-                  displayName: Deploy API package
+                  displayName: Deploy API to wms-api-prasanna
                   inputs:
-                    azureSubscription: $(azureSubscriptionServiceConnection)
-                    appName: $(apiAppServiceName)
-                    package: $(Pipeline.Workspace)/ci/api-drop
+                    azureSubscription: 'wms-service-connection'
+                    appType: webApp
+                    appName: 'wms-api-prasanna'
+                    package: $(Pipeline.Workspace)/api-drop/**/*.zip
 
   - stage: DeployFrontend
-    displayName: Deploy Angular to Azure Static Web Apps
+    displayName: Deploy Angular frontend to Azure App Service
     dependsOn: DeployApi
     jobs:
       - deployment: DeployFrontend
@@ -50,15 +56,24 @@ stages:
           runOnce:
             deploy:
               steps:
+                - download: none
+
                 - download: ci
                   artifact: frontend-drop
 
-                - task: AzureStaticWebApp@0
-                  displayName: Deploy frontend package
+                - task: CopyFiles@2
+                  displayName: Stage Angular production artifact
                   inputs:
-                    azure_static_web_apps_api_token: $(staticWebAppDeploymentToken)
-                    app_location: $(Pipeline.Workspace)/ci/frontend-drop
-                    api_location: ""
-                    output_location: ""
-                    skip_app_build: true
-                    skip_api_build: true
+                    SourceFolder: $(Pipeline.Workspace)/ci/frontend-drop
+                    Contents: '**'
+                    TargetFolder: $(Pipeline.Workspace)/frontend-drop
+
+                - task: AzureWebApp@1
+                  displayName: Deploy frontend to wms-frontend-prasanna
+                  inputs:
+                    azureSubscription: 'wms-service-connection'
+                    appType: webAppLinux
+                    appName: 'wms-frontend-prasanna'
+                    runtimeStack: 'NODE|22-lts'
+                    startUpCommand: 'pm2 serve /home/site/wwwroot --no-daemon --spa'
+                    package: $(Pipeline.Workspace)/frontend-drop

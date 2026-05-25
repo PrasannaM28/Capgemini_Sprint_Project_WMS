@@ -37,6 +37,12 @@ stages:
 
           - bash: |
               set -e
+              npm install -g npm@11.6.1
+              npm --version
+            displayName: Pin npm version
+
+          - bash: |
+              set -e
 
               if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
                 echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
@@ -96,6 +102,12 @@ stages:
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
+
+          - bash: |
+              set -e
+              npm install -g npm@11.6.1
+              npm --version
+            displayName: Pin npm version
 
           - bash: |
               set -e
@@ -167,6 +179,12 @@ stages:
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
+
+          - bash: |
+              set -e
+              npm install -g npm@11.6.1
+              npm --version
+            displayName: Pin npm version
 
           - bash: |
               set -e

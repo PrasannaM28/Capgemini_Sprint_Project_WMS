@@ -10,10 +10,11 @@ pr:
 
 variables:
   buildConfiguration: Release
-  solutionPath: WMS-Solution/WMS-Solution.slnx
-  apiProjectPath: WMS-Solution/WMS.API/WMS.API.csproj
-  frontendProjectPath: WMS-Solution/WMS.Frontend
-  frontendDistPath: WMS-Solution/WMS.Frontend/dist/wms-frontend
+  solutionPath: ''
+  apiProjectPath: ''
+  frontendProjectPath: ''
+  frontendDistPath: ''
+  testProjectPath: ''
 
 stages:
   - stage: Build
@@ -34,6 +35,32 @@ stages:
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
+
+          - bash: |
+              set -e
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              echo "Could not find WMS-Solution.slnx in the checked-out repository."
+              find "$(Build.SourcesDirectory)" -maxdepth 3 \( -name "*.slnx" -o -name "*.sln" \) -print
+              exit 1
+            displayName: Detect solution layout
 
           - script: dotnet restore "$(solutionPath)"
             displayName: Restore .NET solution
@@ -69,6 +96,32 @@ stages:
             inputs:
               versionSpec: 22.x
 
+          - bash: |
+              set -e
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              echo "Could not find WMS-Solution.slnx in the checked-out repository."
+              find "$(Build.SourcesDirectory)" -maxdepth 3 \( -name "*.slnx" -o -name "*.sln" \) -print
+              exit 1
+            displayName: Detect solution layout
+
           - script: dotnet restore "$(solutionPath)"
             displayName: Restore .NET solution
 
@@ -76,7 +129,7 @@ stages:
             displayName: Install Angular dependencies
             workingDirectory: $(frontendProjectPath)
 
-          - script: dotnet test "WMS-Solution/WMS.Tests/WMS.Tests.csproj" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
+          - script: dotnet test "$(testProjectPath)" --configuration $(buildConfiguration) --no-restore --collect "XPlat Code Coverage" --logger "trx" --results-directory "$(Agent.TempDirectory)/TestResults"
             displayName: Run .NET tests
 
           - task: PublishTestResults@2
@@ -111,6 +164,32 @@ stages:
             displayName: Use Node.js 22
             inputs:
               versionSpec: 22.x
+
+          - bash: |
+              set -e
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              if [ -f "$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx" ]; then
+                echo "##vso[task.setvariable variable=solutionPath]$(Build.SourcesDirectory)/WMS-Solution/WMS-Solution.slnx"
+                echo "##vso[task.setvariable variable=apiProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.API/WMS.API.csproj"
+                echo "##vso[task.setvariable variable=frontendProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend"
+                echo "##vso[task.setvariable variable=frontendDistPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Frontend/dist/wms-frontend"
+                echo "##vso[task.setvariable variable=testProjectPath]$(Build.SourcesDirectory)/WMS-Solution/WMS.Tests/WMS.Tests.csproj"
+                exit 0
+              fi
+
+              echo "Could not find WMS-Solution.slnx in the checked-out repository."
+              find "$(Build.SourcesDirectory)" -maxdepth 3 \( -name "*.slnx" -o -name "*.sln" \) -print
+              exit 1
+            displayName: Detect solution layout
 
           - script: dotnet restore "$(solutionPath)"
             displayName: Restore .NET solution

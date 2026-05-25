@@ -2,9 +2,9 @@ trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci
-      source: WMS-CI
-      trigger:
+  - pipeline: ci
+    source: WorkforceManagementSystem
+    trigger: true
         branches:
           include:
             - main
@@ -24,13 +24,13 @@ stages:
               steps:
                 - download: none
 
-                - download: ci
+                - download: WMS_CI
                   artifact: api-drop
 
                 - bash: |
                     set -e
                     mkdir -p "$(Pipeline.Workspace)/api-drop"
-                    cp -R "$(Pipeline.Workspace)/ci/api-drop/." "$(Pipeline.Workspace)/api-drop/"
+                    cp -R "$(Pipeline.Workspace)/WMS_CI/api-drop/." "$(Pipeline.Workspace)/api-drop/"
                     cd "$(Pipeline.Workspace)/api-drop"
                     zip -r wms-api.zip .
                   displayName: Package API artifact
@@ -58,13 +58,13 @@ stages:
               steps:
                 - download: none
 
-                - download: ci
+                - download: WMS_CI
                   artifact: frontend-drop
 
                 - task: CopyFiles@2
                   displayName: Stage Angular production artifact
                   inputs:
-                    SourceFolder: $(Pipeline.Workspace)/ci/frontend-drop
+                    SourceFolder: $(Pipeline.Workspace)/WMS_CI/frontend-drop
                     Contents: '**'
                     TargetFolder: $(Pipeline.Workspace)/frontend-drop
 

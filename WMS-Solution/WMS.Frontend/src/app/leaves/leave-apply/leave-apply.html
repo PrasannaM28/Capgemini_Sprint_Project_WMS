@@ -1,0 +1,210 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <div class="card shadow">
+
+    <div class="card-header">
+
+      <h3>
+        Apply Leave
+      </h3>
+
+    </div>
+
+    <div class="card-body">
+
+      <div *ngIf="canApply; else restrictedLeaveMessage">
+
+      <form
+        [formGroup]="leaveForm"
+        (ngSubmit)="apply()">
+
+        <div class="mb-3">
+
+          <label>
+            Employee Id
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            formControlName="empId">
+
+          <div
+            class="text-danger mt-1"
+
+            *ngIf="
+              f['empId']
+              .touched
+              &&
+              f['empId']
+              .invalid
+            ">
+
+            Employee Id is required
+
+          </div>
+
+        </div>
+
+        <div class="mb-3">
+
+          <label>
+            Leave Type
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="leaveType">
+
+          <div
+            class="text-danger mt-1"
+
+            *ngIf="
+              f['leaveType']
+              .touched
+              &&
+              f['leaveType']
+              .invalid
+            ">
+
+            Leave Type is required
+
+          </div>
+
+        </div>
+
+        <div class="mb-3">
+
+          <label>
+            Reason
+          </label>
+
+          <textarea
+            class="form-control"
+            formControlName="reason">
+
+          </textarea>
+
+          <div
+            class="text-danger mt-1"
+
+            *ngIf="
+              f['reason']
+              .touched
+              &&
+              f['reason']
+              .invalid
+            ">
+
+            <div
+              *ngIf="
+                f['reason']
+                .errors?.['required']
+              ">
+
+              Reason is required
+
+            </div>
+
+            <div
+              *ngIf="
+                f['reason']
+                .errors?.['minlength']
+              ">
+
+              Minimum 5 characters required
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+
+            <label>
+              From Date
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              formControlName=
+                "fromDate">
+
+            <div
+              class="text-danger mt-1"
+
+              *ngIf="
+                f['fromDate']
+                .touched
+                &&
+                f['fromDate']
+                .invalid
+              ">
+
+              From Date is required
+
+            </div>
+
+          </div>
+
+          <div class="col-md-6 mb-3">
+
+            <label>
+              To Date
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              formControlName=
+                "toDate">
+
+            <div
+              class="text-danger mt-1"
+
+              *ngIf="
+                f['toDate']
+                .touched
+                &&
+                f['toDate']
+                .invalid
+              ">
+
+              To Date is required
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          class="btn btn-primary"
+          type="submit">
+
+          Apply
+
+        </button>
+
+      </form>
+
+      </div>
+
+      <ng-template #restrictedLeaveMessage>
+        <div class="alert alert-info mb-0">
+          Leave applications are available for employees only.
+        </div>
+      </ng-template>
+
+    </div>
+
+  </div>
+
+</div>

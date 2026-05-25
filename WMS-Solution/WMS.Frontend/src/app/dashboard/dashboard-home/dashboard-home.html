@@ -1,0 +1,46 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <h2>
+    Dashboard
+  </h2>
+
+  <div class="row mt-4">
+
+    <div class="col-md-4 mb-3" *ngFor="let card of summaryCards">
+
+      <div class="card text-center shadow">
+
+        <div class="card-body">
+
+          <h5>
+            {{ card.label }}
+          </h5>
+
+          <h2>
+            {{ card.label === 'Hours' ? formatHours(card.value) : card.value }}
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card mt-4 shadow">
+
+    <div class="card-body">
+
+      <canvas
+        id="dashboardChart">
+
+      </canvas>
+
+    </div>
+
+  </div>
+
+</div>

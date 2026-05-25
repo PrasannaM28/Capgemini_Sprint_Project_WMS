@@ -1,0 +1,77 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <div class="row g-4">
+
+    <div class="col-lg-4" *ngIf="canManageDepartments">
+
+      <div class="card shadow h-100">
+
+        <div class="card-header">
+          <h3 class="mb-0">{{ editingDepartmentId ? 'Update Department' : 'Add Department' }}</h3>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="departmentForm" (ngSubmit)="saveDepartment()">
+            <div class="mb-3">
+              <label class="form-label">Department Name</label>
+              <input type="text" class="form-control" formControlName="departmentName">
+              <div class="text-danger mt-1" *ngIf="f['departmentName'].touched && f['departmentName'].invalid">
+                Department name is required
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" rows="4" formControlName="description"></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary" type="submit">{{ editingDepartmentId ? 'Update' : 'Create' }}</button>
+              <button class="btn btn-outline-secondary" type="button" *ngIf="editingDepartmentId" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card shadow h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">Departments</h3>
+          <span class="badge bg-secondary">{{ departments.length }} records</span>
+        </div>
+
+        <div class="card-body">
+          <app-loader *ngIf="loading"></app-loader>
+
+          <div class="table-responsive" *ngIf="!loading">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let department of departments">
+                  <td>{{ department.departmentId }}</td>
+                  <td>{{ department.departmentName }}</td>
+                  <td>{{ department.description || '-' }}</td>
+                  <td class="text-nowrap">
+                    <button *ngIf="canManageDepartments" class="btn btn-sm btn-warning me-2" (click)="editDepartment(department)">Edit</button>
+                    <button *ngIf="canManageDepartments" class="btn btn-sm btn-danger" (click)="deleteDepartment(department.departmentId)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

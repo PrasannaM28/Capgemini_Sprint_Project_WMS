@@ -1,0 +1,35 @@
+2026-05-22 19:50:03.716 +05:30 [INF] Executed DbCommand (326ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-05-22 19:50:03.869 +05:30 [INF] Executed DbCommand (49ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-05-22 19:50:03.898 +05:30 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserLogins] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-05-22 19:50:03.947 +05:30 [INF] User profile is available. Using 'C:\Users\LENOVO\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-22 19:50:04.611 +05:30 [INF] Now listening on: https://localhost:7045
+2026-05-22 19:50:04.611 +05:30 [INF] Now listening on: http://localhost:5291
+2026-05-22 19:50:04.939 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-22 19:50:04.940 +05:30 [INF] Hosting environment: Development
+2026-05-22 19:50:04.942 +05:30 [INF] Content root path: C:\Users\LENOVO\Desktop\Capgemini_Sprint_Project\WMS-Solution\WMS.API
+2026-05-22 19:50:15.119 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7045/swagger/index.html - null null
+2026-05-22 19:50:18.087 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7045/swagger/index.html - 200 null text/html;charset=utf-8 2996.1573ms
+2026-05-22 19:50:18.224 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7045/_vs/browserLink - null null
+2026-05-22 19:50:18.225 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7045/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-22 19:50:18.248 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7045/_framework/aspnetcore-browser-refresh.js - 200 14919 application/javascript; charset=utf-8 14.7585ms
+2026-05-22 19:50:18.370 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7045/_vs/browserLink - 200 null text/javascript; charset=UTF-8 146.0495ms
+2026-05-22 19:50:18.516 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7045/swagger/v1/swagger.json - null null
+2026-05-22 19:50:18.572 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7045/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 56.681ms

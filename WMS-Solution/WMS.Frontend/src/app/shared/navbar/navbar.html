@@ -1,0 +1,148 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+  <div class="container-fluid">
+
+    <a class="navbar-brand">
+      WMS
+    </a>
+
+    <div class="collapse navbar-collapse">
+
+      <ul class="navbar-nav me-auto">
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Dashboard
+          </a>
+
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Admin' || role === 'Manager' || role === 'Employee'">
+
+          <a
+            routerLink="/employees"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Employees
+
+          </a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/attendance"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Attendance
+          </a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/leaves"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Leaves
+          </a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/departments"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Departments
+
+          </a>
+
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Admin'">
+
+          <a
+            routerLink="/clients"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Clients
+
+          </a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/projects"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Projects
+
+          </a>
+
+        </li>
+
+        <li class="nav-item">
+
+          <a
+            routerLink="/announcements"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link">
+
+            Announcements
+
+          </a>
+
+        </li>
+
+      </ul>
+
+      <div class="d-flex align-items-center gap-2">
+
+        <button
+          class="btn btn-outline-light"
+          routerLink="/change-password">
+
+          Change Password
+
+        </button>
+
+        <button
+          class="btn btn-danger"
+          (click)="logout()">
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>

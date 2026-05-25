@@ -1,0 +1,66 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <div class="card shadow">
+
+    <div class="card-header">
+
+      <h3>
+        Announcements
+      </h3>
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="card mb-4" *ngIf="canManageAnnouncements">
+        <div class="card-body">
+          <form [formGroup]="announcementForm" (ngSubmit)="saveAnnouncement()">
+            <div class="mb-3">
+              <label class="form-label">Title</label>
+              <input type="text" class="form-control" formControlName="title">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Message</label>
+              <textarea class="form-control" rows="4" formControlName="message"></textarea>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary" type="submit">{{ editingAnnouncementId ? 'Update' : 'Create' }}</button>
+              <button *ngIf="editingAnnouncementId" class="btn btn-outline-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div
+        *ngFor="let announcement of announcements"
+
+        class="border rounded p-3 mb-3">
+
+        <h5>
+          {{ announcement.title }}
+        </h5>
+
+        <p>
+          {{ announcement.message }}
+        </p>
+
+        <div class="d-flex gap-2 mb-2" *ngIf="canManageAnnouncements">
+          <button class="btn btn-sm btn-warning" (click)="editAnnouncement(announcement)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteAnnouncement(announcement.announcementId)">Delete</button>
+        </div>
+
+        <small class="text-muted">
+
+          {{ announcement.createdOn | date }}
+
+        </small>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

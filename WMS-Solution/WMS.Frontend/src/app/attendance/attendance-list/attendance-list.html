@@ -1,0 +1,184 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <div class="card shadow">
+
+    <div class="card-header">
+
+      <h3>
+        Attendance
+      </h3>
+
+    </div>
+
+    <div class="card-body">
+
+      <app-loader
+        *ngIf="loading">
+
+      </app-loader>
+
+      <form
+        [formGroup]="reportForm"
+        class="row g-3 align-items-end mb-4"
+        (ngSubmit)="loadAttendanceForVisibleEmployees()">
+
+        <div class="col-md-3">
+          <label class="form-label">
+            Month
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            min="1"
+            max="12"
+            formControlName="month">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">
+            Year
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            min="2000"
+            formControlName="year">
+        </div>
+
+        <div class="col-md-3">
+          <button
+            type="submit"
+            class="btn btn-primary">
+            Load Timesheet
+          </button>
+        </div>
+      </form>
+
+      <form
+        *ngIf="showEmployeeActions"
+        [formGroup]="attendanceForm"
+        (ngSubmit)="checkIn()">
+
+        <div class="mb-3">
+
+          <label>
+            Work Mode
+          </label>
+
+          <select
+            class="form-select"
+            formControlName="workMode">
+
+            <option value="">
+              Select
+            </option>
+
+            <option [ngValue]="1">
+              Work From Office
+            </option>
+
+            <option [ngValue]="2">
+              Work From Home
+            </option>
+
+            <option [ngValue]="3">
+              Hybrid
+            </option>
+
+          </select>
+
+          <div
+            class="text-danger mt-1"
+
+            *ngIf="
+              f['workMode']
+              .touched
+              &&
+              f['workMode']
+              .invalid
+            ">
+
+            Work Mode is required
+
+          </div>
+
+        </div>
+
+        <div class="d-flex gap-2">
+          <button
+            type="submit"
+            class="btn btn-success">
+
+            Check In
+
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-warning"
+            [disabled]="!openAttendance"
+            (click)="checkOut()">
+
+            Check Out
+
+          </button>
+        </div>
+
+      </form>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>
+                Attendance Id
+              </th>
+              <th>
+                Employee
+              </th>
+              <th>
+                Check In
+              </th>
+              <th>
+                Check Out
+              </th>
+              <th>
+                Total Hours
+              </th>
+              <th>
+                Work Mode
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let attendance of attendanceRecords">
+              <td>
+                {{ attendance.attendanceId }}
+              </td>
+              <td>
+                {{ attendance.employeeName }}
+              </td>
+              <td>
+                {{ attendance.checkIn | date : 'short' }}
+              </td>
+              <td>
+                {{ attendance.checkOut ? (attendance.checkOut | date : 'short') : '-' }}
+              </td>
+              <td>
+                {{ attendance.totalHours }}
+              </td>
+              <td>
+                {{ attendance.workMode }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

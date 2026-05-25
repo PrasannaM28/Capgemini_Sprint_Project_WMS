@@ -1,0 +1,146 @@
+<div class="container mt-5">
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-4">
+
+      <div class="card shadow">
+
+        <div class="card-header text-center">
+
+          <h3>
+            WMS Login
+          </h3>
+
+        </div>
+
+        <div class="card-body">
+
+          <app-loader
+            *ngIf="loading">
+
+          </app-loader>
+
+          <div
+            *ngIf="errorMessage"
+            class="alert alert-danger">
+
+            {{ errorMessage }}
+
+          </div>
+
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="login()">
+
+            <div class="mb-3">
+
+              <label>
+                Username
+              </label>
+
+              <input
+                type="text"
+                class="form-control"
+                formControlName="username">
+
+              <div
+                class="text-danger mt-1"
+
+                *ngIf="
+                  f['username']
+                  .touched
+                  &&
+                  f['username']
+                  .invalid
+                ">
+
+                <div
+                  *ngIf="
+                    f['username']
+                    .errors?.['required']
+                  ">
+
+                  Username is required
+
+                </div>
+
+                <div
+                  *ngIf="
+                    f['username']
+                    .errors?.['minlength']
+                  ">
+
+                  Minimum 3 characters required
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="mb-3">
+
+              <label>
+                Password
+              </label>
+
+              <input
+                type="password"
+                class="form-control"
+                formControlName="password">
+
+              <div
+                class="text-danger mt-1"
+
+                *ngIf="
+                  f['password']
+                  .touched
+                  &&
+                  f['password']
+                  .invalid
+                ">
+
+                <div
+                  *ngIf="
+                    f['password']
+                    .errors?.['required']
+                  ">
+
+                  Password is required
+
+                </div>
+
+                <div
+                  *ngIf="
+                    f['password']
+                    .errors?.['minlength']
+                  ">
+
+                  Minimum 6 characters required
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100">
+
+              Login
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

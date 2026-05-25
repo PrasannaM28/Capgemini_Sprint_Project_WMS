@@ -1,0 +1,173 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+
+  <div
+    class="d-flex justify-content-between align-items-center">
+
+    <h2>
+      Employees
+    </h2>
+
+    <button
+      *ngIf="canCreate"
+      class="btn btn-primary"
+      routerLink="/employee-create">
+
+      Add Employee
+
+    </button>
+
+  </div>
+
+  <div class="row mt-3">
+
+    <div class="col-md-4">
+
+      <form
+        [formGroup]="searchForm">
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search employee"
+          formControlName="searchTerm">
+
+      </form>
+
+    </div>
+
+    <div class="col-md-2">
+
+      <button
+        class="btn btn-success"
+        (click)="search()">
+
+        Search
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <app-loader
+    *ngIf="loading">
+
+  </app-loader>
+
+  <table
+    class="table table-bordered mt-3"
+
+    *ngIf="!loading">
+
+    <thead>
+
+      <tr>
+
+        <th>
+          Id
+        </th>
+
+        <th>
+          Name
+        </th>
+
+        <th>
+          Email
+        </th>
+
+        <th>
+          Actions
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr
+        *ngFor=
+          "let employee
+          of employees">
+
+        <td>
+          {{ employee.employeeId }}
+        </td>
+
+        <td>
+          {{ employee.fullName }}
+        </td>
+
+        <td>
+          {{ employee.email }}
+        </td>
+
+        <td>
+
+          <button
+            *ngIf="canEdit(employee.employeeId)"
+            class=
+              "btn btn-warning btn-sm me-2"
+
+            [routerLink]="[
+              '/employee-edit',
+              employee.employeeId
+            ]">
+
+            Edit
+
+          </button>
+
+          <button
+            *ngIf="canDelete"
+            class=
+              "btn btn-danger btn-sm"
+
+            (click)="delete(
+              employee.employeeId
+            )">
+
+            Delete
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <div
+    class="d-flex justify-content-between">
+
+    <button
+      class="btn btn-secondary"
+      [disabled]="loading || pageNumber <= 1"
+      (click)="previousPage()">
+
+      Previous
+
+    </button>
+
+    <span>
+
+      Page {{ pageNumber }}
+
+    </span>
+
+    <button
+      class="btn btn-secondary"
+      [disabled]="loading || pageNumber >= totalPages"
+      (click)="nextPage()">
+
+      Next
+
+    </button>
+
+  </div>
+
+</div>

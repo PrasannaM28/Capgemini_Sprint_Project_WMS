@@ -14,6 +14,8 @@ from '@angular/forms';
 import { Auth }
 from '../../services/auth';
 
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
+
 import { Announcement }
 from '../../services/announcement';
 
@@ -39,7 +41,8 @@ implements OnInit {
     private fb: FormBuilder,
     private authService: Auth,
     private announcementService:
-      Announcement
+      Announcement,
+    private feedback: UiFeedbackService
   ) {
     this.announcementForm = this.fb.group({
       title: ['', Validators.required],
@@ -123,6 +126,7 @@ implements OnInit {
         this.editingAnnouncementId = null;
         this.announcementForm.reset();
         this.loadAnnouncements();
+        this.feedback.success('Announcement saved', 'The announcement list has been updated.');
       },
     });
   }
@@ -133,12 +137,22 @@ implements OnInit {
       return;
     }
 
-    if (!confirm('Delete announcement?')) {
-      return;
-    }
+    this.feedback.confirm({
+      title: 'Delete announcement?',
+      message: 'This announcement will be removed for all users.',
+      confirmLabel: 'Delete',
+      tone: 'warning',
+    }).subscribe((accepted) => {
+      if (!accepted) {
+        return;
+      }
 
-    this.announcementService.delete(id).subscribe({
-      next: () => this.loadAnnouncements(),
+      this.announcementService.delete(id).subscribe({
+        next: () => {
+          this.loadAnnouncements();
+          this.feedback.success('Announcement deleted', 'The announcement has been removed.');
+        },
+      });
     });
   }
 }

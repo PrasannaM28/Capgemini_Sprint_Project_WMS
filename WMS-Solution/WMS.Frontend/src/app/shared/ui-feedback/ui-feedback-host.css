@@ -1,0 +1,132 @@
+.feedback-stack {
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	z-index: 1200;
+	display: grid;
+	gap: 0.75rem;
+	width: min(22rem, calc(100vw - 2rem));
+	pointer-events: none;
+}
+
+.feedback-stack--shell {
+	right: calc(var(--app-shell-width) + 1rem);
+}
+
+.feedback-toast {
+	pointer-events: auto;
+	display: grid;
+	grid-template-columns: 0.35rem 1fr auto;
+	align-items: start;
+	gap: 0.85rem;
+	padding: 0.95rem 1rem;
+	background: rgba(255, 255, 255, 0.92);
+	animation: appFadeUp 220ms ease both;
+}
+
+.feedback-toast__tone {
+	width: 0.35rem;
+	height: 100%;
+	min-height: 2.8rem;
+	border-radius: 999px;
+}
+
+.feedback-toast__content strong {
+	display: block;
+	font-size: 0.95rem;
+	font-weight: 800;
+	color: #0f172a;
+}
+
+.feedback-toast__content p {
+	margin: 0.25rem 0 0;
+	color: #475569;
+	font-size: 0.9rem;
+	line-height: 1.55;
+}
+
+.feedback-toast__close {
+	border: 0;
+	background: transparent;
+	color: #64748b;
+	font-size: 1.4rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.feedback-toast--success .feedback-toast__tone { background: var(--app-success); }
+.feedback-toast--error .feedback-toast__tone { background: var(--app-danger); }
+.feedback-toast--warning .feedback-toast__tone { background: var(--app-warning); }
+.feedback-toast--info .feedback-toast__tone { background: var(--app-accent); }
+
+.feedback-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1300;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+}
+
+.feedback-modal__backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(2, 6, 23, 0.58);
+	backdrop-filter: blur(10px);
+}
+
+.feedback-modal__dialog {
+	position: relative;
+	width: min(32rem, calc(100vw - 2rem));
+	padding: 1.35rem;
+	background: rgba(255, 255, 255, 0.96);
+	animation: appFadeUp 220ms ease both;
+}
+
+.feedback-modal__dialog h3 {
+	margin: 0.75rem 0 0.5rem;
+	font-size: 1.35rem;
+	font-weight: 900;
+	letter-spacing: -0.03em;
+	color: #0f172a;
+}
+
+.feedback-modal__dialog p {
+	margin: 0;
+	color: #475569;
+	line-height: 1.7;
+}
+
+.feedback-modal__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	margin-top: 1.2rem;
+}
+
+.feedback-modal__dialog--success .page-kicker { background: rgba(22, 163, 74, 0.1); color: var(--app-success); }
+.feedback-modal__dialog--error .page-kicker { background: rgba(239, 68, 68, 0.1); color: var(--app-danger); }
+.feedback-modal__dialog--warning .page-kicker { background: rgba(245, 158, 11, 0.12); color: var(--app-warning); }
+.feedback-modal__dialog--info .page-kicker { background: rgba(37, 99, 235, 0.1); color: var(--app-accent); }
+
+@media (max-width: 1199.98px) {
+	.feedback-stack--shell {
+		right: 1rem;
+	}
+}
+
+@media (max-width: 575.98px) {
+	.feedback-stack {
+		left: 1rem;
+		right: 1rem;
+		width: auto;
+	}
+
+	.feedback-modal__actions {
+		flex-direction: column-reverse;
+	}
+
+	.feedback-modal__actions .btn {
+		width: 100%;
+	}
+}

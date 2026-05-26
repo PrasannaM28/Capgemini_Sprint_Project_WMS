@@ -1,5 +1,3 @@
-<app-navbar></app-navbar>
-
 <div class="container mt-4">
 
   <div class="card shadow">
@@ -7,7 +5,7 @@
     <div class="card-header">
 
       <h3>
-        Edit Employee
+        {{ pageHeading }}
       </h3>
 
     </div>
@@ -164,13 +162,26 @@
           <div class="col-md-6 mb-3">
 
             <label>
-              Department Id
+              Department
             </label>
 
-            <input
-              type="number"
-              class="form-control"
+            <select
+              class="form-select"
               formControlName="departmentId">
+
+              <option [ngValue]="''">
+                Select Department
+              </option>
+
+              <option
+                *ngFor="let department of departments"
+                [ngValue]="department.departmentId">
+
+                {{ department.departmentName }}
+
+              </option>
+
+            </select>
 
             <div
               class="text-danger mt-1"
@@ -194,13 +205,26 @@
         <div class="mb-3">
 
           <label>
-            Role Id
+            Role
           </label>
 
-          <input
-            type="number"
-            class="form-control"
+          <select
+            class="form-select"
             formControlName="roleId">
+
+            <option [ngValue]="''">
+              Select Role
+            </option>
+
+            <option
+              *ngFor="let role of roles"
+              [ngValue]="role.roleId">
+
+              {{ role.roleName }}
+
+            </option>
+
+          </select>
 
           <div
             class="text-danger mt-1"

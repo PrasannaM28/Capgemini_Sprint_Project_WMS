@@ -13,6 +13,7 @@ from '@angular/router';
 
 import { Auth }
 from '../../services/auth';
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-login',
@@ -32,11 +33,15 @@ export class Login {
 
   loading = false;
 
+  showPassword = false;
+
   constructor(
     private fb: FormBuilder,
 
     private authService:
       Auth,
+
+    private feedback: UiFeedbackService,
 
     private router: Router
   )
@@ -71,6 +76,10 @@ export class Login {
     return this.loginForm.controls;
   }
 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   login(): void {
 
     if (
@@ -94,6 +103,11 @@ export class Login {
         {
           this.loading = false;
 
+          this.feedback.success(
+            'Signed in',
+            'Redirecting to your dashboard.'
+          );
+
           this.router.navigate([
             '/dashboard'
           ]);
@@ -105,6 +119,11 @@ export class Login {
 
           this.errorMessage =
             'Invalid credentials';
+
+          this.feedback.error(
+            'Login failed',
+            'Invalid credentials. Please check your username and password.'
+          );
         }
       });
   }

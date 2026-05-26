@@ -1,0 +1,166 @@
+.dashboard-container {
+	padding-bottom: 2rem;
+}
+
+.dashboard-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+	align-items: stretch;
+	margin-top: 1rem;
+	margin-bottom: 1.4rem;
+	padding: 1.35rem;
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	border-radius: 1.35rem;
+	background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(22, 72, 255, 0.84));
+	color: #ffffff;
+	box-shadow: 0 30px 60px rgba(15, 23, 42, 0.18);
+	animation: appFadeUp 480ms ease both;
+}
+
+.dashboard-hero__content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.dashboard-hero .page-title {
+	color: #ffffff;
+}
+
+.dashboard-hero .page-description {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-section--spaced {
+	margin-top: 1.4rem;
+}
+
+.dashboard-section__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.35rem;
+}
+
+.section-title {
+	margin-bottom: 0;
+	font-size: 1.1rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	color: var(--app-text);
+}
+
+.stat-card,
+.chart-card,
+.progress-card {
+	height: 100%;
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	border-radius: 1.2rem;
+}
+
+.stat-card .card-body,
+.chart-card .card-body,
+.progress-card .card-body {
+	padding: 1.25rem;
+}
+
+.stat-card {
+	position: relative;
+	overflow: hidden;
+}
+
+.stat-card::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto auto 0;
+	width: 100%;
+	height: 0.38rem;
+	background: linear-gradient(90deg, var(--app-primary), var(--app-accent));
+}
+
+.stat-label {
+	font-size: 0.82rem;
+	font-weight: 800;
+	color: var(--app-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.stat-value {
+	margin-top: 0.55rem;
+	margin-bottom: 0;
+	font-size: clamp(1.8rem, 2.6vw, 2.7rem);
+	font-weight: 900;
+	letter-spacing: -0.05em;
+	color: var(--app-text);
+}
+
+.chart-wrap {
+	position: relative;
+	min-height: 320px;
+}
+
+.chart-wrap-small {
+	min-height: 260px;
+}
+
+.ring-wrap {
+	position: relative;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+}
+
+.progress-ring {
+	transform: rotate(-90deg);
+}
+
+.ring-track,
+.ring-progress {
+	fill: none;
+	stroke-width: 12;
+}
+
+.ring-track {
+	stroke: rgba(148, 163, 184, 0.25);
+}
+
+.ring-progress {
+	stroke: var(--app-primary);
+	stroke-linecap: round;
+	transition: stroke-dashoffset 0.35s ease;
+}
+
+.ring-value {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 1.4rem;
+	font-weight: 900;
+	color: var(--app-text);
+}
+
+.ring-label {
+	margin-top: 0.75rem;
+	color: var(--app-muted);
+	font-weight: 600;
+}
+
+@media (max-width: 991.98px) {
+	.dashboard-hero {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 767.98px) {
+	.chart-wrap {
+		min-height: 240px;
+	}
+
+	.dashboard-hero {
+		padding: 1.1rem;
+	}
+}

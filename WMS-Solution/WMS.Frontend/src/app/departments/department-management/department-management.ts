@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { Department } from '../../services/department';
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-department-management',
@@ -23,7 +24,8 @@ export class DepartmentManagement implements OnInit {
   constructor(
     private fb: FormBuilder,
     private departmentService: Department,
-    private authService: Auth
+    private authService: Auth,
+    private feedback: UiFeedbackService
   ) {
     this.departmentForm = this.fb.group({
       departmentName: ['', Validators.required],
@@ -97,6 +99,7 @@ export class DepartmentManagement implements OnInit {
         this.departmentForm.reset();
         this.editingDepartmentId = null;
         this.loadDepartments();
+        this.feedback.success('Department saved', 'The department list has been refreshed.');
       },
       error: () => {
         this.loading = false;
@@ -109,17 +112,27 @@ export class DepartmentManagement implements OnInit {
       return;
     }
 
-    if (!confirm('Delete department?')) {
-      return;
-    }
+    this.feedback.confirm({
+      title: 'Delete department?',
+      message: 'This department will be removed from the organization view.',
+      confirmLabel: 'Delete',
+      tone: 'warning',
+    }).subscribe((accepted) => {
+      if (!accepted) {
+        return;
+      }
 
-    this.loading = true;
+      this.loading = true;
 
-    this.departmentService.delete(id).subscribe({
-      next: () => this.loadDepartments(),
-      error: () => {
-        this.loading = false;
-      },
+      this.departmentService.delete(id).subscribe({
+        next: () => {
+          this.feedback.success('Department deleted', 'The department was removed successfully.');
+          this.loadDepartments();
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
     });
   }
 }

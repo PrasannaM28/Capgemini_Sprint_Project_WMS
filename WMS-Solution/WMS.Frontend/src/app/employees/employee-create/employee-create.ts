@@ -1,6 +1,9 @@
 import { Component }
 from '@angular/core';
 
+import { OnInit }
+from '@angular/core';
+
 import {
   FormBuilder,
   FormGroup,
@@ -8,11 +11,20 @@ import {
 }
 from '@angular/forms';
 
+import { HttpClient }
+from '@angular/common/http';
+
 import { Router }
 from '@angular/router';
 
+import { Department }
+from '../../services/department';
 import { Employee }
 from '../../services/employee';
+import { UiFeedbackService }
+from '../../shared/ui-feedback/ui-feedback.service';
+import { environment }
+from '../../../environments/environment';
 
 @Component({
   selector: 'app-employee-create',
@@ -26,7 +38,7 @@ from '../../services/employee';
     './employee-create.css'
 })
 
-export class EmployeeCreate {
+export class EmployeeCreate implements OnInit {
 
   employeeForm: FormGroup;
 
@@ -34,11 +46,21 @@ export class EmployeeCreate {
 
   maxDojDate: string;
 
+  departments: any[] = [];
+
+  roles: any[] = [];
+
   constructor(
     private fb: FormBuilder,
 
     private employeeService:
       Employee,
+
+    private departmentService: Department,
+
+    private feedback: UiFeedbackService,
+
+    private http: HttpClient,
 
     private router: Router
   )
@@ -138,6 +160,36 @@ export class EmployeeCreate {
       });
   }
 
+  ngOnInit(): void {
+
+    this.loadDepartments();
+    this.loadRoles();
+  }
+
+  loadDepartments(): void {
+
+    this.departmentService
+      .getAll()
+      .subscribe({
+        next: (response) =>
+        {
+          this.departments = response.data ?? [];
+        }
+      });
+  }
+
+  loadRoles(): void {
+
+    this.http
+      .get(`${environment.apiUrl}/role`)
+      .subscribe({
+        next: (response) =>
+        {
+          this.roles = (response as any).data ?? [];
+        }
+      });
+  }
+
   get f() {
 
     return this.employeeForm.controls;
@@ -164,8 +216,9 @@ export class EmployeeCreate {
 
         next: () =>
         {
-          alert(
-            'Employee Created Successfully'
+          this.feedback.success(
+            'Employee created',
+            'The new employee was added successfully.'
           );
 
           this.router.navigate([
@@ -175,8 +228,9 @@ export class EmployeeCreate {
 
         error: () =>
         {
-          alert(
-            'Unable to create employee'
+          this.feedback.error(
+            'Unable to create employee',
+            'Please review the form and try again.'
           );
         }
       });

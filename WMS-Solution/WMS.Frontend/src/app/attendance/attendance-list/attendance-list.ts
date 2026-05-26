@@ -20,6 +20,8 @@ import { Employee }
 from '../../services/employee';
 import { Auth }
 from '../../services/auth';
+import { UiFeedbackService }
+from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-attendance-list',
@@ -62,7 +64,9 @@ implements OnInit {
       Employee,
 
     private authService:
-      Auth
+      Auth,
+
+    private feedback: UiFeedbackService
   )
   {
     const now = new Date();
@@ -317,8 +321,9 @@ implements OnInit {
         {
           this.loading = false;
 
-          alert(
-            'Checked In Successfully'
+          this.feedback.success(
+            'Checked in',
+            'Attendance has been recorded successfully.'
           );
 
           this.attendanceForm.reset();
@@ -363,6 +368,11 @@ implements OnInit {
         next: () =>
         {
           this.loading = false;
+
+          this.feedback.info(
+            'Checked out',
+            'Attendance has been closed for the day.'
+          );
 
           if (this.role === 'Employee')
           {

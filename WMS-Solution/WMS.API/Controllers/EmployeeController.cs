@@ -144,7 +144,7 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin,Employee")]
+    [Authorize(Roles = "Admin,Manager,Employee")]
     public async Task<IActionResult> UpdateEmployee(
         int id,
         [FromBody] UpdateEmployeeDto dto)
@@ -160,7 +160,7 @@ public class EmployeeController : ControllerBase
                     "Invalid request."));
         }
 
-        if (User.IsInRole("Employee"))
+        if (User.IsInRole("Manager") || User.IsInRole("Employee"))
         {
             var currentEmployee =
                 await ResolveCurrentEmployeeAsync();

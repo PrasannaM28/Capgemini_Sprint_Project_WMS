@@ -1,1 +1,19 @@
-<router-outlet></router-outlet>
+<ng-container *ngIf="showShell(); else authShell">
+
+	<div class="app-shell">
+
+		<main class="app-shell__content">
+			<router-outlet></router-outlet>
+		</main>
+
+		<app-navbar></app-navbar>
+
+	</div>
+
+</ng-container>
+
+<ng-template #authShell>
+	<router-outlet></router-outlet>
+</ng-template>
+
+<app-feedback-host></app-feedback-host>

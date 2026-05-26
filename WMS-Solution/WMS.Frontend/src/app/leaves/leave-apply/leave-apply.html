@@ -1,210 +1,124 @@
-<app-navbar></app-navbar>
+<div class="container app-page">
 
-<div class="container mt-4">
+	<section class="app-page__hero">
 
-  <div class="card shadow">
+		<div>
+			<span class="page-kicker">Leave operations</span>
+			<h1 class="page-title mt-3">Apply Leave</h1>
+			<p class="page-description mb-0">
+				Submit leave requests from a clearer form flow.
+			</p>
+		</div>
 
-    <div class="card-header">
+	</section>
 
-      <h3>
-        Apply Leave
-      </h3>
+	<div class="card app-page__surface">
 
-    </div>
+		<div class="card-header">
 
-    <div class="card-body">
+			<h3>
+				Apply Leave
+			</h3>
 
-      <div *ngIf="canApply; else restrictedLeaveMessage">
+		</div>
 
-      <form
-        [formGroup]="leaveForm"
-        (ngSubmit)="apply()">
+		<div class="card-body">
 
-        <div class="mb-3">
+			<div *ngIf="canApply; else restrictedLeaveMessage">
 
-          <label>
-            Employee Id
-          </label>
+				<form [formGroup]="leaveForm" (ngSubmit)="apply()">
 
-          <input
-            type="number"
-            class="form-control"
-            formControlName="empId">
+					<div class="mb-3">
 
-          <div
-            class="text-danger mt-1"
+						<label class="form-label">
+							Employee Id
+						</label>
 
-            *ngIf="
-              f['empId']
-              .touched
-              &&
-              f['empId']
-              .invalid
-            ">
+						<input type="number" class="form-control" formControlName="empId">
 
-            Employee Id is required
+						<div class="text-danger mt-1" *ngIf="f['empId'].touched && f['empId'].invalid">
+							Employee Id is required
+						</div>
 
-          </div>
+					</div>
 
-        </div>
+					<div class="mb-3">
 
-        <div class="mb-3">
+						<label class="form-label">
+							Leave Type
+						</label>
 
-          <label>
-            Leave Type
-          </label>
+						<input type="text" class="form-control" formControlName="leaveType">
 
-          <input
-            type="text"
-            class="form-control"
-            formControlName="leaveType">
+						<div class="text-danger mt-1" *ngIf="f['leaveType'].touched && f['leaveType'].invalid">
+							Leave Type is required
+						</div>
 
-          <div
-            class="text-danger mt-1"
+					</div>
 
-            *ngIf="
-              f['leaveType']
-              .touched
-              &&
-              f['leaveType']
-              .invalid
-            ">
+					<div class="mb-3">
 
-            Leave Type is required
+						<label class="form-label">
+							Reason
+						</label>
 
-          </div>
+						<textarea class="form-control" formControlName="reason"></textarea>
 
-        </div>
+						<div class="text-danger mt-1" *ngIf="f['reason'].touched && f['reason'].invalid">
+							<div *ngIf="f['reason'].errors?.['required']">Reason is required</div>
+							<div *ngIf="f['reason'].errors?.['minlength']">Minimum 5 characters required</div>
+						</div>
 
-        <div class="mb-3">
+					</div>
 
-          <label>
-            Reason
-          </label>
+					<div class="row">
 
-          <textarea
-            class="form-control"
-            formControlName="reason">
+						<div class="col-md-6 mb-3">
 
-          </textarea>
+							<label class="form-label">
+								From Date
+							</label>
 
-          <div
-            class="text-danger mt-1"
+							<input type="date" class="form-control" formControlName="fromDate">
 
-            *ngIf="
-              f['reason']
-              .touched
-              &&
-              f['reason']
-              .invalid
-            ">
+							<div class="text-danger mt-1" *ngIf="f['fromDate'].touched && f['fromDate'].invalid">
+								From Date is required
+							</div>
 
-            <div
-              *ngIf="
-                f['reason']
-                .errors?.['required']
-              ">
+						</div>
 
-              Reason is required
+						<div class="col-md-6 mb-3">
 
-            </div>
+							<label class="form-label">
+								To Date
+							</label>
 
-            <div
-              *ngIf="
-                f['reason']
-                .errors?.['minlength']
-              ">
+							<input type="date" class="form-control" formControlName="toDate">
 
-              Minimum 5 characters required
+							<div class="text-danger mt-1" *ngIf="f['toDate'].touched && f['toDate'].invalid">
+								To Date is required
+							</div>
 
-            </div>
+						</div>
 
-          </div>
+					</div>
 
-        </div>
+					<button class="btn btn-primary" type="submit">
+						Apply
+					</button>
 
-        <div class="row">
+				</form>
 
-          <div class="col-md-6 mb-3">
+			</div>
 
-            <label>
-              From Date
-            </label>
+			<ng-template #restrictedLeaveMessage>
+				<div class="app-page__empty mb-0">
+					Leave applications are available for employees only.
+				</div>
+			</ng-template>
 
-            <input
-              type="date"
-              class="form-control"
-              formControlName=
-                "fromDate">
+		</div>
 
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['fromDate']
-                .touched
-                &&
-                f['fromDate']
-                .invalid
-              ">
-
-              From Date is required
-
-            </div>
-
-          </div>
-
-          <div class="col-md-6 mb-3">
-
-            <label>
-              To Date
-            </label>
-
-            <input
-              type="date"
-              class="form-control"
-              formControlName=
-                "toDate">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['toDate']
-                .touched
-                &&
-                f['toDate']
-                .invalid
-              ">
-
-              To Date is required
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <button
-          class="btn btn-primary"
-          type="submit">
-
-          Apply
-
-        </button>
-
-      </form>
-
-      </div>
-
-      <ng-template #restrictedLeaveMessage>
-        <div class="alert alert-info mb-0">
-          Leave applications are available for employees only.
-        </div>
-      </ng-template>
-
-    </div>
-
-  </div>
+	</div>
 
 </div>

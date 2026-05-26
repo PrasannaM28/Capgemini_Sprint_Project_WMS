@@ -10,6 +10,8 @@ from '@angular/common/http';
 import { Injectable }
 from '@angular/core';
 
+import { UiFeedbackService } from '../shared/ui-feedback/ui-feedback.service';
+
 import {
   Observable,
   throwError
@@ -23,6 +25,8 @@ from 'rxjs/operators';
 
 export class ErrorInterceptor
 implements HttpInterceptor {
+
+  constructor(private feedback: UiFeedbackService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -50,7 +54,7 @@ implements HttpInterceptor {
                 error.error.message;
             }
 
-            alert(message);
+            this.feedback.error('Request failed', message);
 
             return throwError(
               () => error

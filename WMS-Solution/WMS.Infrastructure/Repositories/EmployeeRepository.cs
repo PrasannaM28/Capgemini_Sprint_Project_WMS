@@ -38,11 +38,18 @@ public class EmployeeRepository
     {
         searchTerm = searchTerm.ToLower();
 
+        var isIdSearch = int.TryParse(searchTerm, out var employeeId);
+
         return await _context.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Role)
             .Where(e =>
                 e.FirstName.ToLower().Contains(searchTerm)
                 || e.LastName.ToLower().Contains(searchTerm)
-                || e.Email.ToLower().Contains(searchTerm))
+                || e.Email.ToLower().Contains(searchTerm)
+                || (e.Department != null && e.Department.DepartmentName.ToLower().Contains(searchTerm))
+                || (e.Role != null && e.Role.RoleName.ToLower().Contains(searchTerm))
+                || e.EmployeeId == (isIdSearch ? employeeId : -1))
             .ToListAsync();
     }
 }

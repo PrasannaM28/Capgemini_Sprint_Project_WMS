@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { Client } from '../../services/client';
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-client-management',
@@ -23,7 +24,8 @@ export class ClientManagement implements OnInit {
   constructor(
     private fb: FormBuilder,
     private clientService: Client,
-    private authService: Auth
+    private authService: Auth,
+    private feedback: UiFeedbackService
   ) {
     this.clientForm = this.fb.group({
       clientName: ['', Validators.required],
@@ -101,6 +103,7 @@ export class ClientManagement implements OnInit {
         this.clientForm.reset();
         this.editingClientId = null;
         this.loadClients();
+        this.feedback.success('Client saved', 'The client directory has been updated.');
       },
       error: () => {
         this.loading = false;
@@ -113,17 +116,27 @@ export class ClientManagement implements OnInit {
       return;
     }
 
-    if (!confirm('Delete client?')) {
-      return;
-    }
+    this.feedback.confirm({
+      title: 'Delete client?',
+      message: 'This client will be removed from the directory.',
+      confirmLabel: 'Delete',
+      tone: 'warning',
+    }).subscribe((accepted) => {
+      if (!accepted) {
+        return;
+      }
 
-    this.loading = true;
+      this.loading = true;
 
-    this.clientService.delete(id).subscribe({
-      next: () => this.loadClients(),
-      error: () => {
-        this.loading = false;
-      },
+      this.clientService.delete(id).subscribe({
+        next: () => {
+          this.feedback.success('Client deleted', 'The client was removed successfully.');
+          this.loadClients();
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
     });
   }
 }

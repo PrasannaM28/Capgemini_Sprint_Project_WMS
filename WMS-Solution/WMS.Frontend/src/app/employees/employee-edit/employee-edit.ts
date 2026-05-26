@@ -11,15 +11,24 @@ import {
 }
 from '@angular/forms';
 
+import { HttpClient }
+from '@angular/common/http';
+
 import {
   ActivatedRoute,
   Router
 }
 from '@angular/router';
 
+import { Department }
+from '../../services/department';
 import { Employee }
 from '../../services/employee';
 import { Auth } from '../../services/auth';
+import { UiFeedbackService }
+from '../../shared/ui-feedback/ui-feedback.service';
+import { environment }
+from '../../../environments/environment';
 
 @Component({
   selector: 'app-employee-edit',
@@ -44,13 +53,27 @@ implements OnInit {
 
   role = '';
 
+  departments: any[] = [];
+
+  roles: any[] = [];
+
+  get pageHeading(): string {
+    return this.role === 'Admin' ? 'Edit Employee' : 'My Profile';
+  }
+
   constructor(
     private fb: FormBuilder,
 
     private employeeService:
       Employee,
 
+    private departmentService: Department,
+
+    private http: HttpClient,
+
     private authService: Auth,
+
+    private feedback: UiFeedbackService,
 
     private route:
       ActivatedRoute,
@@ -129,12 +152,39 @@ implements OnInit {
     this.role =
       this.authService.getRole();
 
+    this.loadDepartments();
+    this.loadRoles();
+
     this.employeeId = Number(
       this.route.snapshot
         .paramMap.get('id')
     );
 
     this.loadEmployee();
+  }
+
+  loadDepartments(): void {
+
+    this.departmentService
+      .getAll()
+      .subscribe({
+        next: (response) =>
+        {
+          this.departments = response.data ?? [];
+        }
+      });
+  }
+
+  loadRoles(): void {
+
+    this.http
+      .get(`${environment.apiUrl}/role`)
+      .subscribe({
+        next: (response) =>
+        {
+          this.roles = (response as any).data ?? [];
+        }
+      });
   }
 
   loadEmployee(): void {
@@ -169,7 +219,7 @@ implements OnInit {
               }
             );
 
-          if (this.role === 'Employee')
+          if (this.role !== 'Admin')
           {
             this.employeeForm
               .get('departmentId')
@@ -213,12 +263,15 @@ implements OnInit {
         {
           this.loading = false;
 
-          alert(
-            'Employee Updated Successfully'
+          this.feedback.success(
+            this.role === 'Admin' ? 'Employee updated' : 'Profile updated',
+            this.role === 'Admin'
+              ? 'The employee record was saved successfully.'
+              : 'Your profile was saved successfully.'
           );
 
           this.router.navigate([
-            '/employees'
+            this.role === 'Admin' ? '/employees' : '/dashboard'
           ]);
         },
 

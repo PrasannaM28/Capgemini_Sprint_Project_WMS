@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { Auth } from '../../services/auth';
 import { Allocation } from '../../services/allocation';
+import { Client } from '../../services/client';
 import { Project } from '../../services/project';
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-project-management',
@@ -25,6 +28,10 @@ export class ProjectManagement implements OnInit {
 
   employees: any[] = [];
 
+  clients: any[] = [];
+
+  projectAllocations: any[] = [];
+
   readonly statusOptions = [
     { value: 1, label: 'Active' },
     { value: 2, label: 'Completed' },
@@ -35,7 +42,9 @@ export class ProjectManagement implements OnInit {
     private fb: FormBuilder,
     private projectService: Project,
     private authService: Auth,
-    private allocationService: Allocation
+    private allocationService: Allocation,
+    private clientService: Client,
+    private feedback: UiFeedbackService
   ) {
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],
@@ -53,6 +62,8 @@ export class ProjectManagement implements OnInit {
 
   ngOnInit(): void {
     this.role = this.authService.getRole();
+
+    this.loadClients();
 
     if (this.canAssignTeam) {
       this.loadEmployees();
@@ -85,6 +96,14 @@ export class ProjectManagement implements OnInit {
     });
   }
 
+  loadClients(): void {
+    this.clientService.getAll().subscribe({
+      next: (response) => {
+        this.clients = response.data ?? [];
+      },
+    });
+  }
+
   loadProjects(): void {
     this.loading = true;
 
@@ -92,9 +111,29 @@ export class ProjectManagement implements OnInit {
       next: (response) => {
         this.projects = response.data ?? [];
         this.loading = false;
+        this.loadProjectAllocations();
       },
       error: () => {
         this.loading = false;
+      },
+    });
+  }
+
+  loadProjectAllocations(): void {
+    if (!this.canAssignTeam || !this.projects.length) {
+      this.projectAllocations = [];
+      return;
+    }
+
+    forkJoin(
+      this.projects.map((project) =>
+        this.allocationService.getProjectAllocations(project.projectId)
+      )
+    ).subscribe({
+      next: (responses) => {
+        this.projectAllocations = responses.flatMap((response: any) =>
+          (response.data ?? []).map((allocation: any) => allocation)
+        );
       },
     });
   }
@@ -146,6 +185,7 @@ export class ProjectManagement implements OnInit {
         this.projectForm.reset();
         this.editingProjectId = null;
         this.loadProjects();
+        this.feedback.success('Project saved', 'The project board has been updated.');
       },
       error: () => {
         this.loading = false;
@@ -158,17 +198,27 @@ export class ProjectManagement implements OnInit {
       return;
     }
 
-    if (!confirm('Delete project?')) {
-      return;
-    }
+    this.feedback.confirm({
+      title: 'Delete project?',
+      message: 'This project will be removed from the workspace.',
+      confirmLabel: 'Delete',
+      tone: 'warning',
+    }).subscribe((accepted) => {
+      if (!accepted) {
+        return;
+      }
 
-    this.loading = true;
+      this.loading = true;
 
-    this.projectService.delete(id).subscribe({
-      next: () => this.loadProjects(),
-      error: () => {
-        this.loading = false;
-      },
+      this.projectService.delete(id).subscribe({
+        next: () => {
+          this.feedback.success('Project deleted', 'The project was removed successfully.');
+          this.loadProjects();
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
     });
   }
 
@@ -190,8 +240,33 @@ export class ProjectManagement implements OnInit {
     this.allocationService.allocate(payload).subscribe({
       next: (response) => {
         this.allocationForm.reset();
-        alert(response?.message || 'Team member assigned successfully.');
+        this.feedback.success('Team member assigned', response?.message || 'Team member assigned successfully.');
+        this.loadProjectAllocations();
       },
+    });
+  }
+
+  deassignMember(allocation: any): void {
+    if (!this.canAssignTeam) {
+      return;
+    }
+
+    this.feedback.confirm({
+      title: 'Remove team member?',
+      message: `Deassign ${allocation.employeeName} from ${allocation.projectName}?`,
+      confirmLabel: 'Remove',
+      tone: 'warning',
+    }).subscribe((accepted) => {
+      if (!accepted) {
+        return;
+      }
+
+      this.allocationService.deassign(allocation.projectId, allocation.empId).subscribe({
+        next: (response) => {
+          this.feedback.success('Team member removed', response?.message || 'Team member deassigned successfully.');
+          this.loadProjectAllocations();
+        },
+      });
     });
   }
 

@@ -1,14 +1,31 @@
-<app-navbar></app-navbar>
+<div class="container app-page">
 
-<div class="container mt-4">
+  <section class="app-page__hero">
 
-  <div class="card shadow">
+    <div>
+      <span class="page-kicker">Workforce tracking</span>
+      <h1 class="page-title mt-3">Attendance</h1>
+      <p class="page-description mb-0">
+        Review attendance, check in and check out flows, and time summaries in one space.
+      </p>
+    </div>
 
-    <div class="card-header">
+  </section>
 
-      <h3>
-        Attendance
-      </h3>
+  <div class="app-page__badge-row mb-2">
+    <span class="badge rounded-pill text-bg-light">{{ attendanceRecords.length }} records</span>
+  </div>
+
+  <div class="card app-page__surface">
+
+    <div class="card-header app-page__card-title">
+
+      <div class="app-page__toolbar-copy">
+        <span class="app-page__section-label"><i class="bi bi-clock-history"></i> Time tracking</span>
+        <h3>
+          Attendance
+        </h3>
+      </div>
 
     </div>
 
@@ -50,7 +67,8 @@
         <div class="col-md-3">
           <button
             type="submit"
-            class="btn btn-primary">
+            class="btn btn-primary app-icon-btn">
+            <i class="bi bi-search"></i>
             Load Timesheet
           </button>
         </div>
@@ -109,7 +127,9 @@
         <div class="d-flex gap-2">
           <button
             type="submit"
-            class="btn btn-success">
+            class="btn btn-success app-icon-btn">
+
+            <i class="bi bi-box-arrow-in-right"></i>
 
             Check In
 
@@ -117,9 +137,11 @@
 
           <button
             type="button"
-            class="btn btn-warning"
+            class="btn btn-warning app-icon-btn"
             [disabled]="!openAttendance"
             (click)="checkOut()">
+
+            <i class="bi bi-box-arrow-right"></i>
 
             Check Out
 
@@ -129,7 +151,7 @@
       </form>
 
       <div class="table-responsive mt-4">
-        <table class="table table-bordered table-striped">
+        <table class="table align-middle app-data-table">
           <thead>
             <tr>
               <th>

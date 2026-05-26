@@ -1,8 +1,18 @@
-<app-navbar></app-navbar>
+<div class="container app-page">
 
-<div class="container mt-4">
+  <section class="app-page__hero">
 
-  <div class="card shadow">
+    <div>
+      <span class="page-kicker">Workforce directory</span>
+      <h1 class="page-title mt-3">Create Employee</h1>
+      <p class="page-description mb-0">
+        Add a new team member with the same polished flow used across the app.
+      </p>
+    </div>
+
+  </section>
+
+  <div class="card app-page__surface">
 
     <div class="card-header">
 
@@ -312,14 +322,26 @@
           <div class="col-md-6 mb-3">
 
             <label>
-              Department Id
+              Department
             </label>
 
-            <input
-              type="number"
-              class="form-control"
-              formControlName=
-                "departmentId">
+            <select
+              class="form-select"
+              formControlName="departmentId">
+
+              <option [ngValue]="''">
+                Select Department
+              </option>
+
+              <option
+                *ngFor="let department of departments"
+                [ngValue]="department.departmentId">
+
+                {{ department.departmentName }}
+
+              </option>
+
+            </select>
 
             <div
               class="text-danger mt-1"
@@ -343,13 +365,26 @@
         <div class="mb-3">
 
           <label>
-            Role Id
+            Role
           </label>
 
-          <input
-            type="number"
-            class="form-control"
+          <select
+            class="form-select"
             formControlName="roleId">
+
+            <option [ngValue]="''">
+              Select Role
+            </option>
+
+            <option
+              *ngFor="let role of roles"
+              [ngValue]="role.roleId">
+
+              {{ role.roleName }}
+
+            </option>
+
+          </select>
 
           <div
             class="text-danger mt-1"

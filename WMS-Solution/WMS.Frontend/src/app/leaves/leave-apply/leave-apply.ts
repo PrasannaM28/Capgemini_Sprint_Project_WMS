@@ -12,6 +12,8 @@ import { Auth } from '../../services/auth';
 import { Employee } from '../../services/employee';
 import { Leave }
 from '../../services/leave';
+import { UiFeedbackService }
+from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
   selector: 'app-leave-apply',
@@ -41,7 +43,9 @@ export class LeaveApply {
     private employeeService: Employee,
 
     private leaveService:
-      Leave
+      Leave,
+
+    private feedback: UiFeedbackService
   )
   {
     this.leaveForm =
@@ -150,8 +154,9 @@ export class LeaveApply {
 
         next: () =>
         {
-          alert(
-            'Leave Applied Successfully'
+          this.feedback.success(
+            'Leave applied',
+            'Your leave request has been submitted successfully.'
           );
 
           this.leaveForm.reset();

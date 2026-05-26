@@ -244,5 +244,5 @@ stages:
           - task: PublishPipelineArtifact@1
             displayName: Publish Angular artifact
             inputs:
-              targetPath: 'WMS-Solution/WMS.Frontend/dist/wms-frontend'
+              targetPath: 'WMS-Solution/WMS.Frontend/dist/wms-frontend/browser'
               artifact: frontend-drop

@@ -34,7 +34,9 @@ builder.Services.AddCors(options =>
         {
             policy
                 .WithOrigins(
-                    "http://localhost:4200")
+                    "http://localhost:4200",
+                    "https://wms-frontend-prasanna-bgf0gyddfghha8c0.centralindia-01.azurewebsites.net"
+                )
 
                 .AllowAnyHeader()
 

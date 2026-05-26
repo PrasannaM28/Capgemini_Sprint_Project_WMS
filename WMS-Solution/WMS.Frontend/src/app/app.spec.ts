@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { App } from './app';
 import { SharedModule } from './shared/shared-module';
@@ -13,6 +14,7 @@ describe('App', () => {
       declarations: [
         App
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 

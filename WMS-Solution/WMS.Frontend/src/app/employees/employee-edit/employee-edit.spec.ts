@@ -2,10 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 import { EmployeeEdit } from './employee-edit';
 import { Auth } from '../../services/auth';
 import { Employee } from '../../services/employee';
+import { Department } from '../../services/department';
+import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 describe('EmployeeEdit', () => {
   let component: EmployeeEdit;
@@ -46,6 +49,25 @@ describe('EmployeeEdit', () => {
                   roleId: 1,
                 },
               }),
+          },
+        },
+        {
+          provide: Department,
+          useValue: {
+            getAll: () => of({ data: [] }),
+          },
+        },
+        {
+          provide: HttpClient,
+          useValue: {
+            get: () => of({ data: [] }),
+          },
+        },
+        {
+          provide: UiFeedbackService,
+          useValue: {
+            success: () => undefined,
+            error: () => undefined,
           },
         },
       ],

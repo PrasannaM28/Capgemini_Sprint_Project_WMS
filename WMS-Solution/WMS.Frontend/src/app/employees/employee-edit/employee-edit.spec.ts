@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 import { EmployeeEdit } from './employee-edit';
+import { Auth } from '../../services/auth';
+import { Employee } from '../../services/employee';
 
 describe('EmployeeEdit', () => {
   let component: EmployeeEdit;
@@ -20,6 +23,29 @@ describe('EmployeeEdit', () => {
                 get: () => null,
               },
             },
+          },
+        },
+        {
+          provide: Auth,
+          useValue: {
+            getRole: () => 'User',
+          },
+        },
+        {
+          provide: Employee,
+          useValue: {
+            getById: () =>
+              of({
+                data: {
+                  employeeId: 0,
+                  firstName: 'Test',
+                  lastName: 'User',
+                  phoneNumber: '1234567890',
+                  genderId: 1,
+                  departmentId: 1,
+                  roleId: 1,
+                },
+              }),
           },
         },
       ],

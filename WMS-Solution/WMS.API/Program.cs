@@ -173,10 +173,11 @@ using (var scope = app.Services.CreateScope())
     var context = services
         .GetRequiredService<WmsDbContext>();
 
-    
+    if (app.Environment.IsDevelopment())
+    {
         await DbSeeder.SeedAsync(context);
         Log.Information("Database seeding completed.");
-    
+    }
 }
 
 app.Run();

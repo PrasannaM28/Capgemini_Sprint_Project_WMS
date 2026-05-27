@@ -115,7 +115,7 @@ public class EmployeeService : IEmployeeService
         var employees =
             await _unitOfWork
                 .Employees
-                .GetAllAsync();
+                .GetAllEmployeesWithDetailsAsync();
 
         return _mapper.Map<
             IEnumerable<EmployeeResponseDto>>
@@ -264,7 +264,7 @@ public class EmployeeService : IEmployeeService
         var employees =
             await _unitOfWork
                 .Employees
-                .GetAllAsync();
+                .GetAllEmployeesWithDetailsAsync();
 
         var total =
             employees.Count();

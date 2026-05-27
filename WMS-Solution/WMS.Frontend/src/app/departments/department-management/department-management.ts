@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { Department } from '../../services/department';
 import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
@@ -13,25 +13,16 @@ import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service'
 export class DepartmentManagement implements OnInit {
   departments: any[] = [];
 
-  departmentForm: FormGroup;
-
   loading = false;
-
-  editingDepartmentId: number | null = null;
 
   role = '';
 
   constructor(
-    private fb: FormBuilder,
     private departmentService: Department,
     private authService: Auth,
+    private router: Router,
     private feedback: UiFeedbackService
-  ) {
-    this.departmentForm = this.fb.group({
-      departmentName: ['', Validators.required],
-      description: [''],
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.role = this.authService.getRole();
@@ -40,10 +31,6 @@ export class DepartmentManagement implements OnInit {
 
   get canManageDepartments(): boolean {
     return this.role === 'Admin';
-  }
-
-  get f() {
-    return this.departmentForm.controls;
   }
 
   loadDepartments(): void {
@@ -60,51 +47,20 @@ export class DepartmentManagement implements OnInit {
     });
   }
 
+  addDepartment(): void {
+    if (!this.canManageDepartments) {
+      return;
+    }
+
+    this.router.navigate(['/departments/add']);
+  }
+
   editDepartment(department: any): void {
     if (!this.canManageDepartments) {
       return;
     }
 
-    this.editingDepartmentId = department.departmentId;
-    this.departmentForm.patchValue({
-      departmentName: department.departmentName,
-      description: department.description ?? '',
-    });
-  }
-
-  cancelEdit(): void {
-    this.editingDepartmentId = null;
-    this.departmentForm.reset();
-  }
-
-  saveDepartment(): void {
-    if (!this.canManageDepartments) {
-      return;
-    }
-
-    if (this.departmentForm.invalid) {
-      this.departmentForm.markAllAsTouched();
-      return;
-    }
-
-    const payload = this.departmentForm.value;
-    this.loading = true;
-
-    const request = this.editingDepartmentId
-      ? this.departmentService.update(this.editingDepartmentId, payload)
-      : this.departmentService.create(payload);
-
-    request.subscribe({
-      next: () => {
-        this.departmentForm.reset();
-        this.editingDepartmentId = null;
-        this.loadDepartments();
-        this.feedback.success('Department saved', 'The department list has been refreshed.');
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    this.router.navigate(['/departments/edit', department.departmentId]);
   }
 
   deleteDepartment(id: number): void {

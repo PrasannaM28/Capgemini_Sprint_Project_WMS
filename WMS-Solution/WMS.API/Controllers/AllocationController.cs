@@ -56,6 +56,33 @@ public class AllocationController
     public async Task<IActionResult> Allocate(
         CreateAllocationDto dto)
     {
+        if (dto.EmpId <= 0 || dto.ProjectId <= 0)
+        {
+            return BadRequest(ApiResponse<AllocationResponseDto>.FailureResponse(
+                new List<string> { "Employee and project are required." },
+                "Invalid allocation request."));
+        }
+
+        var employeeExists = await _unitOfWork.Employees.ExistsAsync(employee => employee.EmployeeId == dto.EmpId);
+        var projectExists = await _unitOfWork.Projects.ExistsAsync(project => project.ProjectId == dto.ProjectId);
+
+        if (!employeeExists || !projectExists)
+        {
+            return NotFound(ApiResponse<AllocationResponseDto>.FailureResponse(
+                new List<string> { "Employee or project not found." },
+                "Allocation failed."));
+        }
+
+        var existingAllocation = (await _unitOfWork.Allocations.GetAllAsync())
+            .FirstOrDefault(allocation => allocation.EmpId == dto.EmpId && allocation.ProjectId == dto.ProjectId && allocation.Status);
+
+        if (existingAllocation != null)
+        {
+            return BadRequest(ApiResponse<AllocationResponseDto>.FailureResponse(
+                new List<string> { "This employee is already assigned to this project." },
+                "Allocation failed."));
+        }
+
         var result =
             await _allocationService
                 .AllocateAsync(dto);

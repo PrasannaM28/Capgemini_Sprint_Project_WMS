@@ -1,144 +1,125 @@
 <div class="container dashboard-container">
-
   <section class="dashboard-hero">
-
     <div class="dashboard-hero__content">
-
-      <h1 class="page-title mt-3">Dashboard</h1>
-
-      <p class="page-description">
-        Track workforce, attendance, leave, client and project activity from one polished control center designed for fast decisions.
-      </p>
-
+      <span class="page-kicker mb-2 bg-white bg-opacity-10 text-white border-0"><i class="bi bi-speedometer2"></i> Overview</span>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-description">Track workforce, attendance, and project activity at a glance.</p>
     </div>
-
   </section>
 
   <ng-container *ngIf="isAdmin">
-
-    <section class="dashboard-section dashboard-section--spaced">
-
-      <div class="dashboard-section__header">
-        <h4 class="section-title">Employees</h4>
+    <div class="row g-3 mt-2">
+      <div class="col-md-4" *ngFor="let card of adminEmployeeCards">
+        <div class="card stat-card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon mx-auto mb-2">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <h6 class="stat-label">{{ card.label }}</h6>
+            <h2 class="stat-value">{{ card.value }}</h2>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div class="row g-3 mt-2">
-        <div class="col-md-4" *ngFor="let card of adminEmployeeCards">
-          <div class="card stat-card text-center h-100">
-            <div class="card-body">
-              <h6 class="stat-label">{{ card.label }}</h6>
-              <h2 class="stat-value">{{ card.value }}</h2>
+    <div class="row g-3 mt-3">
+      <div class="col-md-7">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-header bg-transparent">
+            <div class="app-page__toolbar-copy">
+              <span class="app-page__section-label"><i class="bi bi-graph-up"></i> Analytics</span>
+              <h3>Attendance (Last 7 Days)</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap">
+              <canvas id="attendanceTrendChart"></canvas>
             </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section--spaced">
-
-      <div class="dashboard-section__header">
-        <h4 class="section-title">Attendance (Last 7 Days)</h4>
-      </div>
-
-      <div class="card chart-card mt-2">
-        <div class="card-body">
-          <div class="chart-wrap">
-            <canvas id="attendanceTrendChart"></canvas>
+      <div class="col-md-5">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-header bg-transparent">
+            <div class="app-page__toolbar-copy">
+              <span class="app-page__section-label"><i class="bi bi-pie-chart-fill"></i> Distribution</span>
+              <h3>Project Status</h3>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section--spaced">
-
-      <div class="dashboard-section__header">
-        <h4 class="section-title">Leave</h4>
-      </div>
-
-      <div class="row g-3 mt-2">
-        <div class="col-md-4" *ngFor="let card of adminLeaveCards">
-          <div class="card stat-card text-center h-100">
-            <div class="card-body">
-              <h6 class="stat-label">{{ card.label }}</h6>
-              <h2 class="stat-value">{{ card.value }}</h2>
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <div class="chart-wrap chart-wrap-small">
+              <canvas id="projectPieChart"></canvas>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="dashboard-section dashboard-section--spaced">
-
-      <div class="dashboard-section__header">
-        <h4 class="section-title">Project</h4>
-      </div>
-
-      <div class="card chart-card mt-2">
-        <div class="card-body">
-          <div class="chart-wrap chart-wrap-small">
-            <canvas id="projectPieChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section--spaced mb-4">
-
-      <div class="row g-3">
-        <div class="col-md-6" *ngFor="let card of adminBottomCards">
-          <div class="card stat-card text-center h-100">
-            <div class="card-body">
-              <h6 class="stat-label">{{ card.label }}</h6>
-              <h2 class="stat-value">{{ card.value }}</h2>
+    <div class="row g-3 mt-3">
+      <div class="col-md-4" *ngFor="let card of adminLeaveCards">
+        <div class="card stat-card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon mx-auto mb-2" [class.text-success]="card.label === 'Approved'" [class.text-danger]="card.label === 'Rejected'" [class.text-warning]="card.label === 'Pending'">
+              <i class="bi bi-calendar-check-fill"></i>
             </div>
+            <h6 class="stat-label">{{ card.label }}</h6>
+            <h2 class="stat-value">{{ card.value }}</h2>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
+    <div class="row g-3 mt-3 mb-4">
+      <div class="col-md-6" *ngFor="let card of adminBottomCards">
+        <div class="card stat-card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon mx-auto mb-2">
+              <i class="bi" [class.bi-building]="card.label === 'Total Departments'" [class.bi-person-badge-fill]="card.label === 'Total Clients'"></i>
+            </div>
+            <h6 class="stat-label">{{ card.label }}</h6>
+            <h2 class="stat-value">{{ card.value }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 
   <ng-container *ngIf="isManager || isEmployee">
+    <div class="row g-3 mt-2">
+      <div class="col-md-3" *ngFor="let card of (isManager ? managerCards : employeeCards)">
+        <div class="card stat-card text-center h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="stat-icon mx-auto mb-2">
+              <i class="bi" [class.bi-folder-fill]="card.label === 'Projects'" [class.bi-calendar-check-fill]="card.label === 'Pending Leaves'" [class.bi-megaphone-fill]="card.label === 'Announcements'" [class.bi-people-fill]="card.label === 'Team Members'"></i>
+            </div>
+            <h6 class="stat-label">{{ card.label }}</h6>
+            <h2 class="stat-value">{{ card.value }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <section class="dashboard-section dashboard-section--spaced">
-
-      <div class="row g-3">
-        <div class="col-md-3" *ngFor="let card of (isManager ? managerCards : employeeCards)">
-          <div class="card stat-card text-center h-100">
-            <div class="card-body">
-              <h6 class="stat-label">{{ card.label }}</h6>
-              <h2 class="stat-value">{{ card.value }}</h2>
+    <div class="row g-3 mt-3 mb-4">
+      <div class="col-md-6 offset-md-3">
+        <div class="card text-center border-0 shadow-sm">
+          <div class="card-header bg-transparent">
+            <div class="app-page__toolbar-copy">
+              <span class="app-page__section-label"><i class="bi bi-pie-chart-fill"></i> Attendance</span>
+              <h3>My Attendance</h3>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section--spaced mb-4">
-      <div class="card progress-card text-center">
-        <div class="card-body">
-          <h4 class="section-title mb-3">My Attendance</h4>
-
-          <div class="ring-wrap">
-            <svg class="progress-ring" width="140" height="140" viewBox="0 0 140 140">
-              <circle class="ring-track" cx="70" cy="70" r="52"></circle>
-              <circle
-                class="ring-progress"
-                cx="70"
-                cy="70"
-                r="52"
-                [attr.stroke-dasharray]="ringStrokeDashArray"
-                [attr.stroke-dashoffset]="ringStrokeDashOffset">
-              </circle>
-            </svg>
-            <div class="ring-value">{{ ownAttendancePercent }}%</div>
+          <div class="card-body py-4">
+            <div class="ring-wrap">
+              <svg class="progress-ring" width="140" height="140" viewBox="0 0 140 140">
+                <circle class="ring-track" cx="70" cy="70" r="52"></circle>
+                <circle class="ring-progress" cx="70" cy="70" r="52" [attr.stroke-dasharray]="ringStrokeDashArray" [attr.stroke-dashoffset]="ringStrokeDashOffset"></circle>
+              </svg>
+              <div class="ring-value">{{ ownAttendancePercent }}%</div>
+            </div>
+            <div class="ring-label mt-2">{{ ownAttendanceProgressLabel }}</div>
           </div>
-
-          <div class="ring-label mt-2">{{ ownAttendanceProgressLabel }}</div>
         </div>
       </div>
-    </section>
-
+    </div>
   </ng-container>
-
 </div>

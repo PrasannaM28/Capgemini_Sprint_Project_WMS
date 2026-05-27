@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { Client } from '../../services/client';
 import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
@@ -13,27 +13,16 @@ import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service'
 export class ClientManagement implements OnInit {
   clients: any[] = [];
 
-  clientForm: FormGroup;
-
   loading = false;
-
-  editingClientId: number | null = null;
 
   role = '';
 
   constructor(
-    private fb: FormBuilder,
     private clientService: Client,
     private authService: Auth,
+    private router: Router,
     private feedback: UiFeedbackService
-  ) {
-    this.clientForm = this.fb.group({
-      clientName: ['', Validators.required],
-      clientAddress: [''],
-      clientPhoneNumber: [''],
-      clientLocation: [''],
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.role = this.authService.getRole();
@@ -42,10 +31,6 @@ export class ClientManagement implements OnInit {
 
   get canManageClients(): boolean {
     return this.role === 'Admin';
-  }
-
-  get f() {
-    return this.clientForm.controls;
   }
 
   loadClients(): void {
@@ -62,53 +47,20 @@ export class ClientManagement implements OnInit {
     });
   }
 
+  addClient(): void {
+    if (!this.canManageClients) {
+      return;
+    }
+
+    this.router.navigate(['/clients/add']);
+  }
+
   editClient(client: any): void {
     if (!this.canManageClients) {
       return;
     }
 
-    this.editingClientId = client.clientId;
-    this.clientForm.patchValue({
-      clientName: client.clientName,
-      clientAddress: client.clientAddress ?? '',
-      clientPhoneNumber: client.clientPhoneNumber ?? '',
-      clientLocation: client.clientLocation ?? '',
-    });
-  }
-
-  cancelEdit(): void {
-    this.editingClientId = null;
-    this.clientForm.reset();
-  }
-
-  saveClient(): void {
-    if (!this.canManageClients) {
-      return;
-    }
-
-    if (this.clientForm.invalid) {
-      this.clientForm.markAllAsTouched();
-      return;
-    }
-
-    const payload = this.clientForm.value;
-    this.loading = true;
-
-    const request = this.editingClientId
-      ? this.clientService.update(this.editingClientId, payload)
-      : this.clientService.create(payload);
-
-    request.subscribe({
-      next: () => {
-        this.clientForm.reset();
-        this.editingClientId = null;
-        this.loadClients();
-        this.feedback.success('Client saved', 'The client directory has been updated.');
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    this.router.navigate(['/clients/edit', client.clientId]);
   }
 
   deleteClient(id: number): void {

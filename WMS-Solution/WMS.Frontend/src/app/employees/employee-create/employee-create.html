@@ -1,420 +1,111 @@
 <div class="container app-page">
-
   <section class="app-page__hero">
-
     <div>
-      <span class="page-kicker">Workforce directory</span>
-      <h1 class="page-title mt-3">Create Employee</h1>
-      <p class="page-description mb-0">
-        Add a new team member with the same polished flow used across the app.
-      </p>
+      <span class="page-kicker"><i class="bi bi-person-plus-fill"></i> Workforce</span>
+      <h1 class="page-title mt-2">Create Employee</h1>
     </div>
-
+    <div class="app-page__hero-actions">
+      <button class="btn btn-light app-icon-btn" routerLink="/employees">
+        <i class="bi bi-arrow-left"></i><span>Back to employees</span>
+      </button>
+    </div>
   </section>
 
   <div class="card app-page__surface">
-
-    <div class="card-header">
-
-      <h3>
-        Create Employee
-      </h3>
-
+    <div class="card-header app-page__card-title">
+      <span class="app-page__section-label"><i class="bi bi-person-badge-fill"></i> New Employee</span>
+      <h3>Employee Details</h3>
     </div>
-
     <div class="card-body">
-
-      <form
-        [formGroup]="employeeForm"
-        (ngSubmit)="create()">
-
+      <form [formGroup]="employeeForm" (ngSubmit)="create()">
         <div class="row">
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              First Name
-            </label>
-
-            <input
-              type="text"
-              class="form-control"
-              formControlName="firstName">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['firstName']
-                .touched
-                &&
-                f['firstName']
-                .invalid
-              ">
-
-              <div
-                *ngIf="
-                  f['firstName']
-                  .errors?.['required']
-                ">
-
-                First Name is required
-
-              </div>
-
-              <div
-                *ngIf="
-                  f['firstName']
-                  .errors?.['minlength']
-                ">
-
-                Minimum 2 characters required
-
-              </div>
-
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" formControlName="firstName" placeholder="Enter first name">
+            <div class="text-danger mt-1 small" *ngIf="f['firstName'].touched && f['firstName'].invalid">
+              <div *ngIf="f['firstName'].errors?.['required']">First name is required</div>
+              <div *ngIf="f['firstName'].errors?.['minlength']">Minimum 2 characters required</div>
             </div>
-
           </div>
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Last Name
-            </label>
-
-            <input
-              type="text"
-              class="form-control"
-              formControlName="lastName">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['lastName']
-                .touched
-                &&
-                f['lastName']
-                .invalid
-              ">
-
-              <div
-                *ngIf="
-                  f['lastName']
-                  .errors?.['required']
-                ">
-
-                Last Name is required
-
-              </div>
-
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Enter last name">
+            <div class="text-danger mt-1 small" *ngIf="f['lastName'].touched && f['lastName'].invalid">
+              <div *ngIf="f['lastName'].errors?.['required']">Last name is required</div>
             </div>
-
           </div>
-
         </div>
 
         <div class="row">
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Email
-            </label>
-
-            <input
-              type="email"
-              class="form-control"
-              formControlName="email">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['email']
-                .touched
-                &&
-                f['email']
-                .invalid
-              ">
-
-              <div
-                *ngIf="
-                  f['email']
-                  .errors?.['required']
-                ">
-
-                Email is required
-
-              </div>
-
-              <div
-                *ngIf="
-                  f['email']
-                  .errors?.['email']
-                ">
-
-                Invalid email format
-
-              </div>
-
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" placeholder="email@example.com">
+            <div class="text-danger mt-1 small" *ngIf="f['email'].touched && f['email'].invalid">
+              <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+              <div *ngIf="f['email'].errors?.['email']">Invalid email format</div>
             </div>
-
           </div>
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Phone Number
-            </label>
-
-            <input
-              type="text"
-              class="form-control"
-              formControlName="phoneNumber">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['phoneNumber']
-                .touched
-                &&
-                f['phoneNumber']
-                .invalid
-              ">
-
-              <div
-                *ngIf="
-                  f['phoneNumber']
-                  .errors?.['required']
-                ">
-
-                Phone Number is required
-
-              </div>
-
-              <div
-                *ngIf="
-                  f['phoneNumber']
-                  .errors?.['pattern']
-                ">
-
-                Enter valid 10 digit number
-
-              </div>
-
+            <label class="form-label">Phone Number</label>
+            <input type="text" class="form-control" formControlName="phoneNumber" placeholder="10-digit number">
+            <div class="text-danger mt-1 small" *ngIf="f['phoneNumber'].touched && f['phoneNumber'].invalid">
+              <div *ngIf="f['phoneNumber'].errors?.['required']">Phone number is required</div>
+              <div *ngIf="f['phoneNumber'].errors?.['pattern']">Enter valid 10 digit number</div>
             </div>
-
           </div>
-
         </div>
 
         <div class="row">
-
-          <div class="col-md-6 mb-3">
-
-            <label>
-              Gender
-            </label>
-
-            <select
-              class="form-select"
-              formControlName="gender">
-
-              <option value="">
-                Select
-              </option>
-
-              <option [ngValue]="1">
-                Male
-              </option>
-
-              <option [ngValue]="2">
-                Female
-              </option>
-
-              <option [ngValue]="3">
-                Other
-              </option>
-
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" formControlName="gender">
+              <option value="">Select</option>
+              <option [ngValue]="1">Male</option>
+              <option [ngValue]="2">Female</option>
+              <option [ngValue]="3">Other</option>
             </select>
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['gender']
-                .touched
-                &&
-                f['gender']
-                .invalid
-              ">
-
-              Gender is required
-
-            </div>
-
+            <div class="text-danger mt-1 small" *ngIf="f['gender'].touched && f['gender'].invalid">Gender is required</div>
           </div>
-
-          <div class="col-md-6 mb-3">
-
-            <label>
-              Date of Birth
-            </label>
-
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dob"
-              [max]="maxDobDate">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['dob']
-                .touched
-                &&
-                f['dob']
-                .invalid
-              ">
-
-              Date of Birth is required
-
-            </div>
-
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" formControlName="dob" [max]="maxDobDate">
+            <div class="text-danger mt-1 small" *ngIf="f['dob'].touched && f['dob'].invalid">Date of birth is required</div>
           </div>
-
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Date of Joining</label>
+            <input type="date" class="form-control" formControlName="doj" [max]="maxDojDate">
+            <div class="text-danger mt-1 small" *ngIf="f['doj'].touched && f['doj'].invalid">Date of joining is required</div>
+          </div>
         </div>
 
         <div class="row">
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Date of Joining
-            </label>
-
-            <input
-              type="date"
-              class="form-control"
-              formControlName="doj"
-              [max]="maxDojDate">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['doj']
-                .touched
-                &&
-                f['doj']
-                .invalid
-              ">
-
-              Date of Joining is required
-
-            </div>
-
-          </div>
-
-          <div class="col-md-6 mb-3">
-
-            <label>
-              Department
-            </label>
-
-            <select
-              class="form-select"
-              formControlName="departmentId">
-
-              <option [ngValue]="''">
-                Select Department
-              </option>
-
-              <option
-                *ngFor="let department of departments"
-                [ngValue]="department.departmentId">
-
-                {{ department.departmentName }}
-
-              </option>
-
+            <label class="form-label">Department</label>
+            <select class="form-select" formControlName="departmentId">
+              <option [ngValue]="''">Select Department</option>
+              <option *ngFor="let department of departments" [ngValue]="department.departmentId">{{ department.departmentName }}</option>
             </select>
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['departmentId']
-                .touched
-                &&
-                f['departmentId']
-                .invalid
-              ">
-
-              Department is required
-
-            </div>
-
+            <div class="text-danger mt-1 small" *ngIf="f['departmentId'].touched && f['departmentId'].invalid">Department is required</div>
           </div>
-
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-select" formControlName="roleId">
+              <option [ngValue]="''">Select Role</option>
+              <option *ngFor="let role of roles" [ngValue]="role.roleId">{{ role.roleName }}</option>
+            </select>
+            <div class="text-danger mt-1 small" *ngIf="f['roleId'].touched && f['roleId'].invalid">Role is required</div>
+          </div>
         </div>
 
-        <div class="mb-3">
-
-          <label>
-            Role
-          </label>
-
-          <select
-            class="form-select"
-            formControlName="roleId">
-
-            <option [ngValue]="''">
-              Select Role
-            </option>
-
-            <option
-              *ngFor="let role of roles"
-              [ngValue]="role.roleId">
-
-              {{ role.roleName }}
-
-            </option>
-
-          </select>
-
-          <div
-            class="text-danger mt-1"
-
-            *ngIf="
-              f['roleId']
-              .touched
-              &&
-              f['roleId']
-              .invalid
-            ">
-
-            Role is required
-
-          </div>
-
+        <div class="d-flex gap-2 flex-wrap mt-3">
+          <button type="submit" class="btn btn-primary app-icon-btn">
+            <i class="bi bi-person-check-fill"></i><span>Save Employee</span>
+          </button>
+          <button type="button" class="btn btn-outline-secondary app-icon-btn" routerLink="/employees">
+            <i class="bi bi-x-lg"></i><span>Cancel</span>
+          </button>
         </div>
-
-        <button
-          type="submit"
-          class="btn btn-success">
-
-          Save
-
-        </button>
-
       </form>
-
     </div>
-
   </div>
-
 </div>

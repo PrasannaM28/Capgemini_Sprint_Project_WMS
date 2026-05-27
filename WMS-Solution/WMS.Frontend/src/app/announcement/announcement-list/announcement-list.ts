@@ -76,7 +76,9 @@ implements OnInit {
         next: (response) =>
         {
           this.announcements =
-            response.data ?? [];
+            [...(response.data ?? [])].sort((left, right) =>
+              new Date(right.createdOn ?? 0).getTime() - new Date(left.createdOn ?? 0).getTime()
+            );
         }
       });
   }

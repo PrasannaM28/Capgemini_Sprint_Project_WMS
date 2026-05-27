@@ -1,94 +1,62 @@
 <div class="container app-page">
-
   <section class="app-page__hero">
-
     <div>
-      <span class="page-kicker">Org updates</span>
-      <h1 class="page-title mt-3">Announcements</h1>
-      <p class="page-description mb-0">
-        Share updates and notices in a cleaner, more readable feed.
-      </p>
+      <span class="page-kicker"><i class="bi bi-megaphone-fill"></i> Updates</span>
+      <h1 class="page-title mt-2">Announcements</h1>
     </div>
-
-    <div class="app-page__hero-actions app-page__badge-row" *ngIf="canManageAnnouncements">
-      <span class="badge rounded-pill text-bg-light">{{ announcements.length }} posts</span>
+    <div class="app-page__hero-actions">
+      <span class="badge rounded-pill">{{ announcements.length }} posts</span>
     </div>
-
   </section>
 
   <div class="card app-page__surface">
-
     <div class="card-header app-page__card-title">
-
       <div class="app-page__toolbar-copy">
         <span class="app-page__section-label"><i class="bi bi-megaphone-fill"></i> Broadcasts</span>
-        <h3>
-          Announcements
-        </h3>
+        <h3>Announcements</h3>
       </div>
-
     </div>
-
     <div class="card-body">
-
-      <div class="card app-page__surface mb-4" *ngIf="canManageAnnouncements">
+      <div class="card mb-4 bg-light border-0" *ngIf="canManageAnnouncements">
         <div class="card-body">
           <form [formGroup]="announcementForm" (ngSubmit)="saveAnnouncement()">
             <div class="mb-3">
               <label class="form-label">Title</label>
-              <input type="text" class="form-control" formControlName="title">
+              <input type="text" class="form-control" formControlName="title" placeholder="Announcement title">
             </div>
             <div class="mb-3">
               <label class="form-label">Message</label>
-              <textarea class="form-control" rows="4" formControlName="message"></textarea>
+              <textarea class="form-control" rows="4" formControlName="message" placeholder="Write your announcement..."></textarea>
             </div>
             <div class="d-flex gap-2 flex-wrap">
               <button class="btn btn-primary app-icon-btn" type="submit">
-                <i class="bi bi-send-check-fill"></i>
-                <span>{{ editingAnnouncementId ? 'Update' : 'Create' }}</span>
+                <i class="bi bi-send-check-fill"></i><span>{{ editingAnnouncementId ? 'Update' : 'Create' }}</span>
               </button>
               <button *ngIf="editingAnnouncementId" class="btn btn-outline-secondary app-icon-btn" type="button" (click)="cancelEdit()">
-                <i class="bi bi-x-lg"></i>
-                <span>Cancel</span>
+                <i class="bi bi-x-lg"></i><span>Cancel</span>
               </button>
             </div>
           </form>
         </div>
       </div>
-
-      <div *ngFor="let announcement of announcements" class="card app-page__surface mb-3">
-
+      <div *ngIf="announcements.length === 0" class="app-page__empty">No announcements yet.</div>
+      <div *ngFor="let announcement of announcements" class="card mb-3 border-0 shadow-sm">
         <div class="card-body">
-
-          <h5 class="mb-2">
-            {{ announcement.title }}
-          </h5>
-
-          <p class="mb-3">
-            {{ announcement.message }}
-          </p>
-
-          <div class="app-table-actions mb-2" *ngIf="canManageAnnouncements">
-            <button class="btn btn-sm btn-warning app-icon-btn app-icon-btn--compact" (click)="editAnnouncement(announcement)" title="Edit announcement" aria-label="Edit announcement">
-              <i class="bi bi-pencil-square"></i>
-              <span>Edit</span>
-            </button>
-            <button class="btn btn-sm btn-danger app-icon-btn app-icon-btn--compact" (click)="deleteAnnouncement(announcement.announcementId)" title="Delete announcement" aria-label="Delete announcement">
-              <i class="bi bi-trash3"></i>
-              <span>Delete</span>
-            </button>
+          <h5 class="mb-2">{{ announcement.title }}</h5>
+          <p class="mb-3">{{ announcement.message }}</p>
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ announcement.createdOn | date }}</small>
+            <div class="app-table-actions" *ngIf="canManageAnnouncements">
+              <button class="btn btn-sm btn-warning app-icon-btn app-icon-btn--compact" (click)="editAnnouncement(announcement)">
+                <i class="bi bi-pencil-square"></i><span>Edit</span>
+              </button>
+              <button class="btn btn-sm btn-danger app-icon-btn app-icon-btn--compact" (click)="deleteAnnouncement(announcement.announcementId)">
+                <i class="bi bi-trash3"></i><span>Delete</span>
+              </button>
+            </div>
           </div>
-
-          <small class="text-muted">
-            {{ announcement.createdOn | date }}
-          </small>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </div>

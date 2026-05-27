@@ -8,48 +8,38 @@ interface NavigationItem {
   description: string;
   route: string;
   roles: string[];
+  icon: string;
 }
 
 @Component({
   selector: 'app-navbar',
-
   standalone: false,
-
   templateUrl: './navbar.html',
-
   styleUrl: './navbar.css'
 })
-
 export class Navbar {
-
   role = '';
-
   accountMenuOpen = false;
 
   readonly navigationItems: NavigationItem[] = [
-  { label: 'Dashboard', description: 'Overview and live metrics', route: '/dashboard', roles: ['Admin', 'Manager', 'Employee'] },
-  { label: 'Employees', description: 'Roster and workforce records', route: '/employees', roles: ['Admin'] },
-  { label: 'Attendance', description: 'Daily presence and reports', route: '/attendance', roles: ['Admin', 'Manager', 'Employee'] },
-  { label: 'Leaves', description: 'Requests and approvals', route: '/leaves', roles: ['Admin', 'Manager', 'Employee'] },
-  { label: 'Departments', description: 'Org structure and teams', route: '/departments', roles: ['Admin', 'Manager', 'Employee'] },
-  { label: 'Clients', description: 'Accounts and relationships', route: '/clients', roles: ['Admin'] },
-  { label: 'Projects', description: 'Delivery and assignments', route: '/projects', roles: ['Admin', 'Manager', 'Employee'] },
-  { label: 'Announcements', description: 'Org updates and notices', route: '/announcements', roles: ['Admin', 'Manager', 'Employee'] },
+    { label: 'Dashboard', description: 'Overview & metrics', route: '/dashboard', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-grid-1x2-fill' },
+    { label: 'Employees', description: 'Roster & records', route: '/employees', roles: ['Admin'], icon: 'bi-people-fill' },
+    { label: 'Attendance', description: 'Daily presence', route: '/attendance', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-clock-fill' },
+    { label: 'Leaves', description: 'Requests & approvals', route: '/leaves', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-calendar-check-fill' },
+    { label: 'Departments', description: 'Org structure', route: '/departments', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-building' },
+    { label: 'Clients', description: 'Accounts & relationships', route: '/clients', roles: ['Admin'], icon: 'bi-person-badge-fill' },
+    { label: 'Projects', description: 'Delivery & tracking', route: '/projects', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-folder-fill' },
+    { label: 'Allocations', description: 'Team assignments', route: '/project-allocations', roles: ['Admin', 'Manager'], icon: 'bi-diagram-3-fill' },
+    { label: 'Announcements', description: 'Org updates', route: '/announcements', roles: ['Admin', 'Manager', 'Employee'], icon: 'bi-megaphone-fill' },
   ];
 
   constructor(
-    private authService:
-      Auth,
-
+    private authService: Auth,
     private employeeService: Employee,
-
     private router: Router,
-
     private elementRef: ElementRef<HTMLElement>
-  )
-  {
-    this.role =
-      this.authService.getRole();
+  ) {
+    this.role = this.authService.getRole();
   }
 
   get visibleNavigationItems(): NavigationItem[] {
@@ -62,7 +52,6 @@ export class Navbar {
 
   toggleAccountMenu(event: MouseEvent): void {
     event.stopPropagation();
-
     this.accountMenuOpen = !this.accountMenuOpen;
   }
 
@@ -72,61 +61,33 @@ export class Navbar {
 
   openProfile(): void {
     const username = this.authService.getUsername();
-
     this.closeAccountMenu();
-
-    if (!this.showProfileOption || !username) {
-      return;
-    }
-
+    if (!this.showProfileOption || !username) return;
     this.employeeService.search(username).subscribe({
       next: (response) => {
         const employees = response.data ?? [];
-        const normalizedUsername = username.toLowerCase();
-
-        const exactMatch = employees.find((employee: any) =>
-          String(employee.email ?? '').toLowerCase() === normalizedUsername
-        );
-
-        const profileEmployee = exactMatch ?? employees[0];
-
-        if (profileEmployee?.employeeId) {
-          this.router.navigate([
-            '/employee-edit',
-            profileEmployee.employeeId
-          ]);
-        }
+        const match = employees.find((e: any) => String(e.email ?? '').toLowerCase() === username.toLowerCase());
+        const profile = match ?? employees[0];
+        if (profile?.employeeId) this.router.navigate(['/employee-edit', profile.employeeId]);
       }
     });
   }
 
   openChangePassword(): void {
     this.closeAccountMenu();
-
-    this.router.navigate([
-      '/change-password'
-    ]);
+    this.router.navigate(['/change-password']);
   }
 
   logout(): void {
-
     this.closeAccountMenu();
-
     this.authService.logout();
-
-    this.router.navigate([
-      '/login'
-    ]);
+    this.router.navigate(['/login']);
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node | null;
-
-    if (target && this.elementRef.nativeElement.contains(target)) {
-      return;
-    }
-
+    if (target && this.elementRef.nativeElement.contains(target)) return;
     this.closeAccountMenu();
   }
 }

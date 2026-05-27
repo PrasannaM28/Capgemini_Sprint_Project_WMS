@@ -1,107 +1,74 @@
 <aside class="app-navbar">
-
   <div class="app-navbar__panel">
-
     <div class="app-navbar__top-row">
-
       <div class="app-navbar__brand-group">
-
         <a class="app-navbar__brand" routerLink="/dashboard">
-
-          <span class="app-navbar__mark">WMS</span>
-
+          <span class="app-navbar__mark">WM</span>
           <span class="app-navbar__brand-copy">
-            <strong>Workforce Suite</strong>
-            <small>Command center</small>
+            <strong>Workflow</strong>
+            <small>Management Suite</small>
           </span>
-
         </a>
-
         <span class="app-navbar__role" *ngIf="role">
-          {{ role }} access
+          <i class="bi bi-shield-check me-1"></i>{{ role }}
         </span>
-
       </div>
-
       <div class="app-navbar__account">
-
         <button
-          class="btn btn-light btn-sm rounded-circle app-navbar__profile-trigger"
+          class="btn rounded-circle app-navbar__profile-trigger"
           type="button"
           (click)="toggleAccountMenu($event)"
           [attr.aria-expanded]="accountMenuOpen"
           aria-haspopup="menu"
-          aria-label="Open account menu"
-          style="width: 2.95rem; height: 2.95rem;">
-
+          aria-label="Open account menu">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path fill="currentColor" d="M12 2.75a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9Zm0 11c-4.33 0-7.75 2.53-7.75 5.75v1.75h15.5v-1.75c0-3.22-3.42-5.75-7.75-5.75Z"/>
           </svg>
-
         </button>
-
         <div
           *ngIf="accountMenuOpen"
-          class="dropdown-menu dropdown-menu-dark dropdown-menu-end show app-navbar__account-menu"
+          class="app-navbar__account-menu"
           role="menu"
           aria-label="Account actions">
-
           <a
             *ngIf="showProfileOption"
-            class="dropdown-item rounded-3 app-navbar__account-item"
+            class="app-navbar__account-item"
             role="menuitem"
             (click)="openProfile()">
-
-            Profile
-
+            <i class="bi bi-person-circle me-2"></i> Profile
           </a>
-
           <button
-            class="dropdown-item rounded-3 app-navbar__account-item"
+            class="app-navbar__account-item"
             type="button"
             role="menuitem"
             (click)="openChangePassword()">
-
-            Change Password
-
+            <i class="bi bi-key me-2"></i> Change Password
           </button>
-
           <button
-            class="dropdown-item rounded-3 app-navbar__account-item app-navbar__account-item--danger"
+            class="app-navbar__account-item app-navbar__account-item--danger"
             type="button"
             role="menuitem"
             (click)="logout()">
-
-            Logout
-
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
           </button>
-
         </div>
-
       </div>
-
     </div>
-
     <nav class="app-navbar__nav-wrap" aria-label="Primary navigation">
-
       <a
         *ngFor="let item of visibleNavigationItems"
         [routerLink]="item.route"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
         class="app-navbar__link">
-
-        <span class="app-navbar__link-mark"></span>
-
+        <span class="app-navbar__link-icon">
+          <i [class]="'bi ' + item.icon"></i>
+        </span>
         <span class="app-navbar__link-copy">
           <strong>{{ item.label }}</strong>
           <small>{{ item.description }}</small>
         </span>
-
       </a>
-
     </nav>
-
   </div>
-
 </aside>

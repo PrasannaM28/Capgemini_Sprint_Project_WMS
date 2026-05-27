@@ -1,0 +1,65 @@
+<div class="container app-page">
+  <section class="app-page__hero">
+    <div>
+      <span class="page-kicker"><i class="bi bi-folder-fill"></i> Delivery</span>
+      <h1 class="page-title mt-2">{{ pageHeading }}</h1>
+    </div>
+    <div class="app-page__hero-actions">
+      <button class="btn btn-light app-icon-btn" type="button" (click)="cancel()">
+        <i class="bi bi-arrow-left"></i><span>Back to projects</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="card app-page__surface">
+    <div class="card-header app-page__card-title">
+      <span class="app-page__section-label"><i class="bi bi-pencil-square"></i> Details</span>
+      <h3>{{ isEditMode ? 'Edit Project' : 'New Project' }}</h3>
+    </div>
+    <div class="card-body">
+      <app-loader *ngIf="loading"></app-loader>
+      <form [formGroup]="projectForm" (ngSubmit)="saveProject()" *ngIf="!loading">
+        <div class="mb-3">
+          <label class="form-label">Project Name</label>
+          <input type="text" class="form-control" formControlName="projectName" placeholder="Enter project name">
+          <div class="text-danger mt-1 small" *ngIf="f['projectName'].touched && f['projectName'].invalid">Project name is required</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Client</label>
+          <select class="form-select" formControlName="clientId">
+            <option [ngValue]="null">Select client</option>
+            <option *ngFor="let client of clients" [ngValue]="client.clientId">{{ client.clientName }}</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" formControlName="startDate">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" formControlName="endDate">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" formControlName="status">
+            <option *ngFor="let option of statusOptions" [ngValue]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-primary app-icon-btn" type="submit">
+            <i class="bi bi-save2-fill"></i><span>{{ isEditMode ? 'Update' : 'Create' }}</span>
+          </button>
+          <button class="btn btn-outline-secondary app-icon-btn" type="button" (click)="cancel()">
+            <i class="bi bi-x-lg"></i><span>Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

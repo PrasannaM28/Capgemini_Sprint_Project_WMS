@@ -1,130 +1,113 @@
 <div class="container app-page">
+  <section class="app-page__hero">
+    <div>
+      <span class="page-kicker"><i class="bi bi-calendar-check-fill"></i> Leave</span>
+      <h1 class="page-title mt-2">Leave Requests</h1>
+    </div>
+    <div class="app-page__hero-actions">
+      <span class="badge rounded-pill">{{ leaves.length }} requests</span>
+    </div>
+  </section>
 
-	<section class="app-page__hero">
+  <div class="app-page__split" [class.app-page__split--single]="!showApplyForm">
+    <div class="card app-page__surface" *ngIf="showApplyForm">
+      <div class="card-header app-page__card-title">
+        <div class="app-page__toolbar-copy">
+          <span class="app-page__section-label"><i class="bi bi-calendar2-plus-fill"></i> Request</span>
+          <h3>Apply Leave</h3>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="leaveForm" (ngSubmit)="applyLeave()">
+          <div class="mb-3">
+            <label class="form-label">Employee Id</label>
+            <input type="number" class="form-control" formControlName="empId">
+            <div class="text-danger mt-1 small" *ngIf="f['empId'].touched && f['empId'].invalid">Employee ID is required</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Leave Type</label>
+            <input type="text" class="form-control" formControlName="leaveType" placeholder="e.g. Sick, Vacation">
+            <div class="text-danger mt-1 small" *ngIf="f['leaveType'].touched && f['leaveType'].invalid">Leave type is required</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <textarea class="form-control" rows="3" formControlName="reason" placeholder="Brief reason for leave"></textarea>
+            <div class="text-danger mt-1 small" *ngIf="f['reason'].touched && f['reason'].invalid">
+              <div *ngIf="f['reason'].errors?.['required']">Reason is required</div>
+              <div *ngIf="f['reason'].errors?.['minlength']">Minimum 5 characters required</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-control" formControlName="fromDate">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-control" formControlName="toDate">
+            </div>
+          </div>
+          <button class="btn btn-primary app-icon-btn w-100" type="submit" [disabled]="submitting">
+            <i class="bi bi-send-fill"></i><span>{{ submitting ? 'Submitting...' : 'Apply Leave' }}</span>
+          </button>
+        </form>
+      </div>
+    </div>
 
-		<div>
-			<span class="page-kicker">Leave operations</span>
-			<h1 class="page-title mt-3">Leave Requests</h1>
-			<p class="page-description mb-0">
-				Review, approve, and manage leave flow from a cleaner workspace.
-			</p>
-		</div>
-
-	</section>
-
-	<div class="app-page__split" [class.app-page__split--single]="!showApplyForm">
-
-		<div class="card app-page__surface" *ngIf="showApplyForm">
-
-			<div class="card-header app-page__card-title">
-				<div class="app-page__toolbar-copy">
-					<span class="app-page__section-label"><i class="bi bi-calendar2-plus-fill"></i> Leave request</span>
-					<h3 class="mb-0">Apply Leave</h3>
-				</div>
-			</div>
-
-			<div class="card-body">
-				<form [formGroup]="leaveForm" (ngSubmit)="applyLeave()">
-					<div class="mb-3">
-						<label class="form-label">Employee Id</label>
-						<input type="number" class="form-control" formControlName="empId">
-						<div class="text-danger mt-1" *ngIf="f['empId'].touched && f['empId'].invalid">Employee Id is required</div>
-					</div>
-
-					<div class="mb-3">
-						<label class="form-label">Leave Type</label>
-						<input type="text" class="form-control" formControlName="leaveType">
-						<div class="text-danger mt-1" *ngIf="f['leaveType'].touched && f['leaveType'].invalid">Leave Type is required</div>
-					</div>
-
-					<div class="mb-3">
-						<label class="form-label">Reason</label>
-						<textarea class="form-control" rows="3" formControlName="reason"></textarea>
-						<div class="text-danger mt-1" *ngIf="f['reason'].touched && f['reason'].invalid">
-							<div *ngIf="f['reason'].errors?.['required']">Reason is required</div>
-							<div *ngIf="f['reason'].errors?.['minlength']">Minimum 5 characters required</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-6 mb-3">
-							<label class="form-label">From Date</label>
-							<input type="date" class="form-control" formControlName="fromDate">
-						</div>
-						<div class="col-md-6 mb-3">
-							<label class="form-label">To Date</label>
-							<input type="date" class="form-control" formControlName="toDate">
-						</div>
-					</div>
-
-					<button class="btn btn-primary app-icon-btn" type="submit" [disabled]="submitting">
-						<i class="bi bi-send-fill"></i>
-						<span>{{ submitting ? 'Submitting...' : 'Apply Leave' }}</span>
-					</button>
-				</form>
-			</div>
-		</div>
-
-		<div class="card app-page__surface">
-
-			<div class="card-header app-page__card-title">
-				<div class="app-page__toolbar-copy">
-					<span class="app-page__section-label"><i class="bi bi-inboxes-fill"></i> Requests</span>
-					<h3 class="mb-0">Leave Requests</h3>
-				</div>
-				<button class="btn btn-outline-secondary btn-sm app-icon-btn app-icon-btn--compact" type="button" (click)="loadLeaves()">
-					<i class="bi bi-arrow-clockwise"></i>
-					<span>Refresh</span>
-				</button>
-			</div>
-
-			<div class="card-body">
-				<app-loader *ngIf="loading"></app-loader>
-
-				<div class="app-page__empty" *ngIf="!loading && leaves.length === 0">
-					No leave requests found.
-				</div>
-
-				<div class="table-responsive" *ngIf="!loading && leaves.length > 0">
-					<table class="table align-middle mb-0 app-data-table">
-						<thead>
-							<tr>
-								<th>Leave Id</th>
-								<th>Emp</th>
-								<th>Type</th>
-								<th>Status</th>
-								<th>Dates</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="let leave of leaves">
-								<td>{{ leave.leaveId }}</td>
-								<td>{{ leave.empId }}</td>
-								<td>{{ leave.leaveType }}</td>
-								<td>{{ leave.status }}</td>
-								<td>{{ leave.fromDate | date:'mediumDate' }} - {{ leave.toDate | date:'mediumDate' }}</td>
-								<td>
-									<div class="app-table-actions">
-										<button *ngIf="canApprove" class="btn btn-sm btn-success app-icon-btn app-icon-btn--icon-only" (click)="approve(leave.leaveId)" [disabled]="leave.status !== 'Pending'" title="Approve leave" aria-label="Approve leave">
-											<i class="bi bi-check2-circle"></i>
-										</button>
-										<button *ngIf="canApprove" class="btn btn-sm btn-danger app-icon-btn app-icon-btn--icon-only" (click)="reject(leave.leaveId)" [disabled]="leave.status !== 'Pending'" title="Reject leave" aria-label="Reject leave">
-											<i class="bi bi-x-circle-fill"></i>
-										</button>
-										<button *ngIf="canCancel" class="btn btn-sm btn-warning app-icon-btn app-icon-btn--icon-only" (click)="cancel(leave.leaveId)" [disabled]="leave.status === 'Cancelled'" title="Cancel leave" aria-label="Cancel leave">
-											<i class="bi bi-slash-circle"></i>
-										</button>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-
-		</div>
-
-	</div>
-
+    <div class="card app-page__surface">
+      <div class="card-header app-page__card-title">
+        <div class="app-page__toolbar-copy">
+          <span class="app-page__section-label"><i class="bi bi-inboxes-fill"></i> Requests</span>
+          <h3>Leave Records</h3>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm app-icon-btn app-icon-btn--compact" type="button" (click)="loadLeaves()">
+          <i class="bi bi-arrow-clockwise"></i><span>Refresh</span>
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <app-loader *ngIf="loading"></app-loader>
+        <div class="table-responsive" *ngIf="!loading && leaves.length > 0">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Requested By</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Approved By</th>
+                <th>Dates</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let leave of leaves">
+                <td><span class="fw-bold">{{ leave.employeeName || '-' }}</span></td>
+                <td><span class="fw-bold">{{ leave.leaveType }}</span></td>
+                <td>
+                  <span class="badge" [class.bg-warning]="leave.status === 'Pending'" [class.bg-success]="leave.status === 'Approved'" [class.bg-danger]="leave.status === 'Rejected'" [class.bg-secondary]="leave.status === 'Cancelled'">
+                    {{ leave.status }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ leave.approvedByName || '-' }}</td>
+                <td class="text-muted small">{{ leave.fromDate | date:'mediumDate' }} - {{ leave.toDate | date:'mediumDate' }}</td>
+                <td class="text-end">
+                  <div class="app-table-actions justify-content-end">
+                    <button *ngIf="canApprove" class="btn btn-sm btn-success app-icon-btn app-icon-btn--icon-only" (click)="approve(leave.leaveId)" [disabled]="leave.status !== 'Pending'" title="Approve">
+                      <i class="bi bi-check2-circle"></i>
+                    </button>
+                    <button *ngIf="canApprove" class="btn btn-sm btn-danger app-icon-btn app-icon-btn--icon-only" (click)="reject(leave.leaveId)" [disabled]="leave.status !== 'Pending'" title="Reject">
+                      <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                    <button *ngIf="canCancel" class="btn btn-sm btn-warning app-icon-btn app-icon-btn--icon-only" (click)="cancel(leave.leaveId)" [disabled]="leave.status === 'Cancelled'" title="Cancel">
+                      <i class="bi bi-slash-circle"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="!loading && leaves.length === 0" class="app-page__empty m-3">No leave requests found.</div>
+      </div>
+    </div>
+  </div>
 </div>

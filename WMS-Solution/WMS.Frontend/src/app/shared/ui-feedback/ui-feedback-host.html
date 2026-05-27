@@ -1,33 +1,35 @@
 <div class="feedback-stack" [class.feedback-stack--shell]="shellMode" *ngIf="toasts$ | async as toasts">
-	<div
-		*ngFor="let toast of toasts; trackBy: trackToast"
-		class="feedback-toast feedback-toast--{{ toast.tone }}">
-		<div class="feedback-toast__tone"></div>
-		<div class="feedback-toast__content">
-			<strong>{{ toast.title }}</strong>
-			<p>{{ toast.message }}</p>
-		</div>
-		<button type="button" class="feedback-toast__close" (click)="dismissToast(toast.id)">
-			&times;
-		</button>
-	</div>
+  <div *ngFor="let toast of toasts; trackBy: trackToast" class="feedback-toast feedback-toast--{{ toast.tone }}">
+    <div class="feedback-toast__icon">
+      <i class="bi" [class.bi-check2-circle]="toast.tone === 'success'" [class.bi-exclamation-triangle-fill]="toast.tone === 'error'" [class.bi-info-circle-fill]="toast.tone === 'info'" [class.bi-exclamation-circle-fill]="toast.tone === 'warning'"></i>
+    </div>
+    <div class="feedback-toast__content">
+      <strong>{{ toast.title }}</strong>
+      <p>{{ toast.message }}</p>
+    </div>
+    <button type="button" class="feedback-toast__close" (click)="dismissToast(toast.id)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
 </div>
 
 <ng-container *ngIf="confirm$ | async as confirm">
-	<div class="feedback-modal">
-		<div class="feedback-modal__backdrop"></div>
-		<div class="feedback-modal__dialog feedback-modal__dialog--{{ confirm.tone }}">
-			<span class="page-kicker">Confirmation</span>
-			<h3>{{ confirm.title }}</h3>
-			<p>{{ confirm.message }}</p>
-			<div class="feedback-modal__actions">
-				<button type="button" class="btn btn-outline-secondary" (click)="rejectConfirm()">
-					{{ confirm.cancelLabel }}
-				</button>
-				<button type="button" class="btn btn-primary" (click)="acceptConfirm()">
-					{{ confirm.confirmLabel }}
-				</button>
-			</div>
-		</div>
-	</div>
+  <div class="feedback-modal">
+    <div class="feedback-modal__backdrop" (click)="rejectConfirm()"></div>
+    <div class="feedback-modal__dialog">
+      <div class="feedback-modal__icon">
+        <i class="bi" [class.bi-exclamation-triangle-fill]="confirm.tone === 'warning'" [class.bi-info-circle-fill]="confirm.tone === 'info'" [class.bi-check2-circle]="confirm.tone === 'success'" [class.bi-x-circle-fill]="confirm.tone === 'error'"></i>
+      </div>
+      <h3>{{ confirm.title }}</h3>
+      <p>{{ confirm.message }}</p>
+      <div class="feedback-modal__actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="rejectConfirm()">
+          {{ confirm.cancelLabel }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="acceptConfirm()">
+          {{ confirm.confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
 </ng-container>

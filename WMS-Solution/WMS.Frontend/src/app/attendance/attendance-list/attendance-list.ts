@@ -52,6 +52,8 @@ implements OnInit {
 
   attendanceRecords: any[] = [];
 
+  searchForm: FormGroup;
+
   visibleEmployees: any[] = [];
 
   constructor(
@@ -92,8 +94,15 @@ implements OnInit {
         year: [
           now.getFullYear(),
           [Validators.required]
+        ],
+        attendanceDate: [
+          ''
         ]
       });
+
+    this.searchForm = this.fb.group({
+      employeeName: ['']
+    });
   }
 
   get f() {
@@ -226,7 +235,9 @@ implements OnInit {
           this.loading = false;
 
           this.attendanceRecords =
-            response.data ?? [];
+            [...(response.data ?? [])].sort((left: any, right: any) =>
+              new Date(right.checkIn ?? 0).getTime() - new Date(left.checkIn ?? 0).getTime()
+            );
         },
         error: () =>
         {
@@ -282,13 +293,45 @@ implements OnInit {
 
           this.attendanceRecords =
             responses.flatMap(
-              response => response.data ?? []);
+              response => response.data ?? [])
+              .sort((left: any, right: any) =>
+                new Date(right.checkIn ?? 0).getTime() - new Date(left.checkIn ?? 0).getTime()
+              );
         },
         error: () =>
         {
           this.loading = false;
         }
       });
+  }
+
+  get filteredAttendanceRecords(): any[] {
+    const employeeTerm = String(this.searchForm.value.employeeName ?? '').trim().toLowerCase();
+    const attendanceDate = this.reportForm.value.attendanceDate;
+
+    return this.attendanceRecords.filter(record => {
+      const matchesEmployee = !employeeTerm || String(record.employeeName ?? '').toLowerCase().includes(employeeTerm);
+      const matchesDate = !attendanceDate || this.formatDate(record.checkIn) === attendanceDate;
+
+      return matchesEmployee && matchesDate;
+    });
+  }
+
+  search(): void {
+    this.attendanceRecords = [...this.attendanceRecords];
+  }
+
+  private formatDate(value: any): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value);
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   checkIn(): void {

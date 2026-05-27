@@ -76,6 +76,8 @@ public class LeaveController : ControllerBase
             }
         }
 
+        result = await EnrichLeavesAsync(result);
+
         return Ok(
             ApiResponse<IEnumerable<LeaveResponseDto>>
             .SuccessResponse(result));
@@ -99,9 +101,11 @@ public class LeaveController : ControllerBase
             await _leaveService
                 .ApplyLeaveAsync(dto);
 
+        var enriched = await EnrichLeavesAsync(new[] { result });
+
         return Ok(
             ApiResponse<LeaveResponseDto>
-            .SuccessResponse(result));
+            .SuccessResponse(enriched.First()));
     }
 
     [HttpPut("approve")]
@@ -109,15 +113,17 @@ public class LeaveController : ControllerBase
     public async Task<IActionResult> ApproveLeave(
         LeaveApprovalDto dto)
     {
+        var currentEmployee = await ResolveCurrentEmployeeAsync();
+
+        if (currentEmployee == null)
+        {
+            return Forbid();
+        }
+
+        dto.ApprovedBy = currentEmployee.EmployeeId;
+
         if (User.IsInRole("Manager"))
         {
-            var currentEmployee = await ResolveCurrentEmployeeAsync();
-
-            if (currentEmployee == null)
-            {
-                return Forbid();
-            }
-
             var leave = await _leaveService.GetByIdAsync(dto.LeaveId);
 
             if (leave == null)
@@ -138,9 +144,11 @@ public class LeaveController : ControllerBase
             await _leaveService
                 .ApproveLeaveAsync(dto);
 
+        var enriched = await EnrichLeavesAsync(new[] { result });
+
         return Ok(
             ApiResponse<LeaveResponseDto>
-            .SuccessResponse(result));
+            .SuccessResponse(enriched.First()));
     }
 
     [HttpPut("cancel/{leaveId}")]
@@ -212,5 +220,27 @@ public class LeaveController : ControllerBase
                 currentEmployeeProjectIds.Contains(allocation.ProjectId))
             .Select(allocation => allocation.EmpId)
             .ToHashSet();
+    }
+
+    private async Task<IEnumerable<LeaveResponseDto>> EnrichLeavesAsync(IEnumerable<LeaveResponseDto> leaves)
+    {
+        var employees = await _employeeService.GetAllEmployeesAsync();
+        var employeeLookup = employees.ToDictionary(employee => employee.EmployeeId, employee => employee.FullName);
+
+        return leaves
+            .OrderByDescending(leave => leave.AppliedOn)
+            .Select(leave =>
+            {
+                leave.EmployeeName = employeeLookup.TryGetValue(leave.EmpId, out var requestedBy)
+                    ? requestedBy
+                    : string.Empty;
+
+                leave.ApprovedByName = leave.ApprovedBy.HasValue && employeeLookup.TryGetValue(leave.ApprovedBy.Value, out var approvedBy)
+                    ? approvedBy
+                    : string.Empty;
+
+                return leave;
+            })
+            .ToList();
     }
 }

@@ -12,8 +12,13 @@ import { LeaveList } from './leaves/leave-list/leave-list';
 import { EmployeeEdit } from './employees/employee-edit/employee-edit';
 import { AnnouncementList } from './announcement/announcement-list/announcement-list';
 import { DepartmentManagement } from './departments/department-management/department-management';
+import { DepartmentForm } from './departments/department-form/department-form';
 import { ClientManagement } from './clients/client-management/client-management';
+import { ClientForm } from './clients/client-form/client-form';
 import { ProjectManagement } from './projects/project-management/project-management';
+import { ProjectForm } from './projects/project-form/project-form';
+import { ProjectAllocations } from './projects/project-allocations/project-allocations';
+import { ProjectAllocationsAssign } from './projects/project-allocations-assign/project-allocations-assign';
 import { ChangePassword } from './auth/change-password/change-password';
 import { RoleGuard } from './guards/role-guard';
 
@@ -64,6 +69,60 @@ const routes: Routes = [
     data: { roles: ['Employee'] },
   },
   {
+    path: 'departments/add',
+    component: DepartmentForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'departments/edit/:id',
+    component: DepartmentForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'clients/add',
+    component: ClientForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'clients/edit/:id',
+    component: ClientForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'project-allocations/assign',
+    component: ProjectAllocationsAssign,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Manager'] },
+  },
+  {
+    path: 'project-allocations',
+    component: ProjectAllocations,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Manager', 'Employee'] },
+  },
+  {
+    path: 'projects/add',
+    component: ProjectForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'projects/edit/:id',
+    component: ProjectForm,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+  },
+  {
+    path: 'projects',
+    component: ProjectManagement,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Manager', 'Employee'] },
+  },
+  {
     path: 'departments',
     component: DepartmentManagement,
     canActivate: [AuthGuard, RoleGuard],
@@ -74,12 +133,6 @@ const routes: Routes = [
     component: ClientManagement,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] },
-  },
-  {
-    path: 'projects',
-    component: ProjectManagement,
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Admin', 'Manager', 'Employee'] },
   },
   {
     path: 'employee-edit/:id',

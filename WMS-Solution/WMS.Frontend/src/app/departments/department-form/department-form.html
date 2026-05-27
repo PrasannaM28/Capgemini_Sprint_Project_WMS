@@ -1,0 +1,44 @@
+<div class="container app-page">
+  <section class="app-page__hero">
+    <div>
+      <span class="page-kicker"><i class="bi bi-building"></i> Organization</span>
+      <h1 class="page-title mt-2">{{ pageHeading }}</h1>
+    </div>
+    <div class="app-page__hero-actions">
+      <button class="btn btn-light app-icon-btn" type="button" (click)="cancel()">
+        <i class="bi bi-arrow-left"></i><span>Back to departments</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="card app-page__surface">
+    <div class="card-header app-page__card-title">
+      <span class="app-page__section-label"><i class="bi bi-pencil-square"></i> Details</span>
+      <h3>{{ isEditMode ? 'Edit Department' : 'New Department' }}</h3>
+    </div>
+    <div class="card-body">
+      <app-loader *ngIf="loading"></app-loader>
+      <form [formGroup]="departmentForm" (ngSubmit)="saveDepartment()" *ngIf="!loading">
+        <div class="mb-3">
+          <label class="form-label">Department Name</label>
+          <input type="text" class="form-control" formControlName="departmentName" placeholder="Enter department name">
+          <div class="text-danger mt-1 small" *ngIf="f['departmentName'].touched && f['departmentName'].invalid">Department name is required</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" rows="4" formControlName="description" placeholder="Enter department description"></textarea>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-primary app-icon-btn" type="submit">
+            <i class="bi bi-save2-fill"></i><span>{{ isEditMode ? 'Update' : 'Create' }}</span>
+          </button>
+          <button class="btn btn-outline-secondary app-icon-btn" type="button" (click)="cancel()">
+            <i class="bi bi-x-lg"></i><span>Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

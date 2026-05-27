@@ -1,220 +1,72 @@
 <div class="container app-page">
-
   <section class="app-page__hero">
-
     <div>
-      <span class="page-kicker">Delivery operations</span>
-      <h1 class="page-title mt-3">Projects</h1>
-      <p class="page-description mb-0">
-        Coordinate projects, team allocation, and delivery status in a clearer workspace.
-      </p>
+      <span class="page-kicker"><i class="bi bi-folder-fill"></i> Delivery</span>
+      <h1 class="page-title mt-2">Projects</h1>
     </div>
-
-    <div class="app-page__hero-actions app-page__badge-row">
-      <span class="badge rounded-pill text-bg-light">{{ projects.length }} projects</span>
-      <span class="badge rounded-pill text-bg-light" *ngIf="canAssignTeam">{{ projectAllocations.length }} allocations</span>
+    <div class="app-page__hero-actions">
+      <span class="badge rounded-pill">{{ projects.length }} projects</span>
+      <button *ngIf="canManageProjects" class="btn btn-light app-icon-btn" type="button" (click)="addProject()">
+        <i class="bi bi-folder-plus"></i><span>Add project</span>
+      </button>
     </div>
-
   </section>
 
-  <div class="app-page__split" [class.app-page__split--single]="!canManageProjects && !canAssignTeam">
-
-    <div class="card app-page__surface" *ngIf="canAssignTeam">
-
-      <div class="card-header app-page__card-title">
-        <div class="app-page__toolbar-copy">
-          <span class="app-page__section-label"><i class="bi bi-diagram-3-fill"></i> Allocation</span>
-          <h3>Assign Team</h3>
-        </div>
+  <div class="card app-page__surface">
+    <div class="card-header app-page__card-title">
+      <div class="app-page__toolbar-copy">
+        <span class="app-page__section-label"><i class="bi bi-collection-fill"></i> Portfolio</span>
+        <h3>Projects</h3>
       </div>
-
-      <div class="card-body">
-        <form [formGroup]="allocationForm" (ngSubmit)="assignTeamMember()">
-          <div class="mb-3">
-            <label class="form-label">Employee</label>
-            <select class="form-select" formControlName="empId">
-              <option [ngValue]="null">Select employee</option>
-              <option *ngFor="let employee of employees" [ngValue]="employee.employeeId">
-                {{ employee.fullName }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Project</label>
-            <select class="form-select" formControlName="projectId">
-              <option [ngValue]="null">Select project</option>
-              <option *ngFor="let project of projects" [ngValue]="project.projectId">
-                {{ project.projectName }}
-              </option>
-            </select>
-          </div>
-
-          <button class="btn btn-success app-icon-btn" type="submit">
-            <i class="bi bi-person-check-fill"></i>
-            <span>Assign</span>
+      <form [formGroup]="searchForm">
+        <div class="input-group" style="max-width: 360px;">
+          <input type="text" class="form-control" placeholder="Search by project or client" formControlName="searchTerm">
+          <button class="btn btn-primary" type="button" (click)="search()">
+            <i class="bi bi-search"></i>
           </button>
-        </form>
-      </div>
-
-    </div>
-
-    <div class="card app-page__surface" *ngIf="canManageProjects">
-
-      <div class="card-header app-page__card-title">
-        <div class="app-page__toolbar-copy">
-          <span class="app-page__section-label"><i class="bi bi-kanban-fill"></i> Project editor</span>
-          <h3>{{ editingProjectId ? 'Update Project' : 'Add Project' }}</h3>
         </div>
-      </div>
-
-      <div class="card-body">
-        <form [formGroup]="projectForm" (ngSubmit)="saveProject()">
-          <div class="mb-3">
-            <label class="form-label">Project Name</label>
-            <input type="text" class="form-control" formControlName="projectName">
-            <div class="text-danger mt-1" *ngIf="f['projectName'].touched && f['projectName'].invalid">
-              Project name is required
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Client</label>
-            <select class="form-select" formControlName="clientId">
-              <option [ngValue]="null">Select client</option>
-              <option *ngFor="let client of clients" [ngValue]="client.clientId">
-                {{ client.clientName }}
-              </option>
-            </select>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Start Date</label>
-              <input type="date" class="form-control" formControlName="startDate">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">End Date</label>
-              <input type="date" class="form-control" formControlName="endDate">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Status</label>
-            <select class="form-select" formControlName="status">
-              <option *ngFor="let option of statusOptions" [ngValue]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
-
-          <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-primary app-icon-btn" type="submit">
-              <i class="bi bi-save2-fill"></i>
-              <span>{{ editingProjectId ? 'Update' : 'Create' }}</span>
-            </button>
-            <button class="btn btn-outline-secondary app-icon-btn" type="button" *ngIf="editingProjectId" (click)="cancelEdit()">
-              <i class="bi bi-x-lg"></i>
-              <span>Cancel</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
+      </form>
     </div>
-
-    <div class="card app-page__surface">
-
-      <div class="card-header app-page__card-title">
-        <div class="app-page__toolbar-copy">
-          <span class="app-page__section-label"><i class="bi bi-collection-fill"></i> Portfolio</span>
-          <h3>Projects</h3>
-        </div>
-        <button *ngIf="canManageProjects" class="btn btn-outline-secondary btn-sm app-icon-btn app-icon-btn--compact" type="button" (click)="cancelEdit()" [disabled]="!editingProjectId">
-          <i class="bi bi-broom"></i>
-          <span>Clear</span>
-        </button>
-      </div>
-
-      <div class="card-body">
-        <app-loader *ngIf="loading"></app-loader>
-
-        <div class="table-responsive" *ngIf="!loading">
-          <table class="table align-middle mb-0 app-data-table">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Client</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Status</th>
-                <th *ngIf="canManageProjects">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let project of projects">
-                <td>{{ project.projectId }}</td>
-                <td>{{ project.projectName }}</td>
-                <td>{{ project.clientName || '-' }}</td>
-                <td>{{ project.startDate ? (project.startDate | date:'mediumDate') : '-' }}</td>
-                <td>{{ project.endDate ? (project.endDate | date:'mediumDate') : '-' }}</td>
-                <td>{{ project.status }}</td>
-                <td *ngIf="canManageProjects">
-                  <div class="app-table-actions">
-                    <button class="btn btn-sm btn-warning app-icon-btn app-icon-btn--icon-only" (click)="editProject(project)" title="Edit project" aria-label="Edit project">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger app-icon-btn app-icon-btn--icon-only" (click)="deleteProject(project.projectId)" title="Delete project" aria-label="Delete project">
-                      <i class="bi bi-trash3"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="card app-page__surface" *ngIf="canAssignTeam">
-
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="mb-0">Assigned Team Members</h3>
-        <span class="badge rounded-pill text-bg-light">{{ projectAllocations.length }} records</span>
-      </div>
-
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table align-middle mb-0 app-data-table">
-            <thead>
-              <tr>
-                <th>Project</th>
-                <th>Employee</th>
-                <th>Assigned On</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let allocation of projectAllocations">
-                <td>{{ allocation.projectName }}</td>
-                <td>{{ allocation.employeeName }}</td>
-                <td>{{ allocation.assignedOn ? (allocation.assignedOn | date:'mediumDate') : '-' }}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-danger app-icon-btn app-icon-btn--compact" (click)="deassignMember(allocation)">
-                    <i class="bi bi-person-dash-fill"></i>
-                    <span>Remove</span>
+    <div class="card-body p-0">
+      <app-loader *ngIf="loading"></app-loader>
+      <div class="table-responsive" *ngIf="!loading">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Client</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
+              <th class="text-end" *ngIf="canManageProjects">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let project of filteredProjects">
+              <td><span class="fw-bold">{{ project.projectName }}</span></td>
+              <td class="text-muted">{{ project.clientName || '-' }}</td>
+              <td>{{ project.startDate ? (project.startDate | date:'mediumDate') : '-' }}</td>
+              <td>{{ project.endDate ? (project.endDate | date:'mediumDate') : '-' }}</td>
+              <td>
+                <span class="badge" [class.bg-success]="project.status === 'Completed'" [class.bg-warning]="project.status === 'Active'" [class.bg-secondary]="project.status === 'On Hold'">
+                  {{ project.status }}
+                </span>
+              </td>
+              <td *ngIf="canManageProjects" class="text-end">
+                <div class="app-table-actions justify-content-end">
+                  <a class="btn btn-sm btn-warning app-icon-btn app-icon-btn--icon-only" [routerLink]="['/projects/edit', project.projectId]" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                  <button class="btn btn-sm btn-danger app-icon-btn app-icon-btn--icon-only" type="button" (click)="deleteProject(project.projectId)" title="Delete">
+                    <i class="bi bi-trash3"></i>
                   </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
+      <div *ngIf="!loading && filteredProjects.length === 0" class="app-page__empty m-3">No projects found.</div>
     </div>
-
   </div>
-
 </div>

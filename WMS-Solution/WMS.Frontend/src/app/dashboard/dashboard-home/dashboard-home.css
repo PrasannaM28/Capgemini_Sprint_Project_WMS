@@ -1,166 +1,142 @@
 .dashboard-container {
-	padding-bottom: 2rem;
+  padding-bottom: 2rem;
 }
 
 .dashboard-hero {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 1rem;
-	align-items: stretch;
-	margin-top: 1rem;
-	margin-bottom: 1.4rem;
-	padding: 1.35rem;
-	border: 1px solid rgba(148, 163, 184, 0.2);
-	border-radius: 1.35rem;
-	background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(22, 72, 255, 0.84));
-	color: #ffffff;
-	box-shadow: 0 30px 60px rgba(15, 23, 42, 0.18);
-	animation: appFadeUp 480ms ease both;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(79, 70, 229, 0.85));
+  color: #fff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  animation: fadeUp 480ms ease both;
 }
 
-.dashboard-hero__content {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-.dashboard-hero .page-title {
-	color: #ffffff;
+.dashboard-hero .page-title,
+.dashboard-hero .page-description {
+  color: inherit;
 }
 
 .dashboard-hero .page-description {
-	color: rgba(255, 255, 255, 0.8);
-}
-
-.dashboard-section--spaced {
-	margin-top: 1.4rem;
-}
-
-.dashboard-section__header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-bottom: 0.35rem;
-}
-
-.section-title {
-	margin-bottom: 0;
-	font-size: 1.1rem;
-	font-weight: 800;
-	letter-spacing: -0.02em;
-	color: var(--app-text);
-}
-
-.stat-card,
-.chart-card,
-.progress-card {
-	height: 100%;
-	border: 1px solid rgba(148, 163, 184, 0.16);
-	border-radius: 1.2rem;
-}
-
-.stat-card .card-body,
-.chart-card .card-body,
-.progress-card .card-body {
-	padding: 1.25rem;
+  opacity: 0.8;
 }
 
 .stat-card {
-	position: relative;
-	overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card::before {
-	content: '';
-	position: absolute;
-	inset: 0 auto auto 0;
-	width: 100%;
-	height: 0.38rem;
-	background: linear-gradient(90deg, var(--app-primary), var(--app-accent));
+  content: '';
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 0.3rem;
+  background: linear-gradient(90deg, var(--app-primary), var(--app-accent));
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 70, 229, 0.08);
+  border-radius: 0.85rem;
+  color: var(--app-primary);
+  font-size: 1.25rem;
 }
 
 .stat-label {
-	font-size: 0.82rem;
-	font-weight: 800;
-	color: var(--app-muted);
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--app-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .stat-value {
-	margin-top: 0.55rem;
-	margin-bottom: 0;
-	font-size: clamp(1.8rem, 2.6vw, 2.7rem);
-	font-weight: 900;
-	letter-spacing: -0.05em;
-	color: var(--app-text);
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  font-size: clamp(1.8rem, 2.6vw, 2.7rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--app-text);
 }
 
 .chart-wrap {
-	position: relative;
-	min-height: 320px;
+  position: relative;
+  min-height: 300px;
 }
 
 .chart-wrap-small {
-	min-height: 260px;
+  min-height: 240px;
+  width: 100%;
+  max-width: 320px;
 }
 
 .ring-wrap {
-	position: relative;
-	width: 150px;
-	height: 150px;
-	margin: 0 auto;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
 }
 
 .progress-ring {
-	transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .ring-track,
 .ring-progress {
-	fill: none;
-	stroke-width: 12;
+  fill: none;
+  stroke-width: 12;
 }
 
 .ring-track {
-	stroke: rgba(148, 163, 184, 0.25);
+  stroke: rgba(148, 163, 184, 0.2);
 }
 
 .ring-progress {
-	stroke: var(--app-primary);
-	stroke-linecap: round;
-	transition: stroke-dashoffset 0.35s ease;
+  stroke: var(--app-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s ease;
 }
 
 .ring-value {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 1.4rem;
-	font-weight: 900;
-	color: var(--app-text);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--app-text);
 }
 
 .ring-label {
-	margin-top: 0.75rem;
-	color: var(--app-muted);
-	font-weight: 600;
+  margin-top: 0.5rem;
+  color: var(--app-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 991.98px) {
-	.dashboard-hero {
-		grid-template-columns: 1fr;
-	}
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 767.98px) {
-	.chart-wrap {
-		min-height: 240px;
-	}
+  .chart-wrap {
+    min-height: 220px;
+  }
 
-	.dashboard-hero {
-		padding: 1.1rem;
-	}
+  .dashboard-hero {
+    padding: 1.1rem;
+  }
 }

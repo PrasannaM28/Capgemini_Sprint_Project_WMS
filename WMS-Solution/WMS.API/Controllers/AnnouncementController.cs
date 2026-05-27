@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using WMS.Application.Common;
 using WMS.Application.DTOs.Announcement;
 using WMS.Application.Interfaces.Services;
@@ -29,6 +30,10 @@ public class AnnouncementController
         var result =
             await _announcementService
                 .GetAllAsync();
+
+        result = result
+            .OrderByDescending(announcement => announcement.CreatedOn)
+            .ToList();
 
         return Ok(
             ApiResponse<IEnumerable<

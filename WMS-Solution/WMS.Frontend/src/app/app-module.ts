@@ -12,7 +12,7 @@ import { EmployeesModule } from './employees/employees-module';
 import { AttendanceModule } from './attendance/attendance-module';
 import { LeavesModule } from './leaves/leaves-module';
 import { DepartmentsModule } from './departments/departments-module';
-import { ClientManagement } from './clients/client-management/client-management';
+import { ClientsModule } from './clients/clients-module';
 import { ProjectsModule } from './projects/projects-module';
 import { AnnouncementModule } from './announcement/announcement-module';
 import { SharedModule } from './shared/shared-module';
@@ -21,7 +21,7 @@ import { ErrorInterceptor } from './interceptors/error-interceptor';
 import { ChangeDetectionInterceptor } from './interceptors/change-detection.interceptor';
 
 @NgModule({
-  declarations: [App, ClientManagement],
+  declarations: [App],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -33,6 +33,7 @@ import { ChangeDetectionInterceptor } from './interceptors/change-detection.inte
     AttendanceModule,
     LeavesModule,
     DepartmentsModule,
+    ClientsModule,
     ProjectsModule,
     AnnouncementModule,
     SharedModule,

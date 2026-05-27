@@ -95,7 +95,9 @@ export class LeaveList {
 
     this.leaveService.getAll().subscribe({
       next: (response) => {
-        this.leaves = response.data ?? [];
+        this.leaves = [...(response.data ?? [])].sort((left, right) =>
+          new Date(right.appliedOn ?? 0).getTime() - new Date(left.appliedOn ?? 0).getTime()
+        );
         this.loading = false;
       },
       error: () => {
@@ -132,7 +134,6 @@ export class LeaveList {
     this.leaveService.approve({
       leaveId,
       status: 2,
-      approvedBy: this.authService.getUserId(),
     }).subscribe({
       next: () => this.loadLeaves(),
     });
@@ -146,7 +147,6 @@ export class LeaveList {
     this.leaveService.approve({
       leaveId,
       status: 3,
-      approvedBy: this.authService.getUserId(),
     }).subscribe({
       next: () => this.loadLeaves(),
     });

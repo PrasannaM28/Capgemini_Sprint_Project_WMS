@@ -1,260 +1,86 @@
-<div class="container mt-4">
-
-  <div class="card shadow">
-
-    <div class="card-header">
-
-      <h3>
-        {{ pageHeading }}
-      </h3>
-
+<div class="container app-page">
+  <section class="app-page__hero">
+    <div>
+      <span class="page-kicker"><i class="bi bi-person-gear"></i> Profile</span>
+      <h1 class="page-title mt-2">{{ pageHeading }}</h1>
     </div>
+    <div class="app-page__hero-actions">
+      <button class="btn btn-light app-icon-btn" routerLink="/dashboard">
+        <i class="bi bi-house-door"></i><span>Back to home</span>
+      </button>
+    </div>
+  </section>
 
+  <div class="card app-page__surface">
+    <div class="card-header app-page__card-title">
+      <span class="app-page__section-label"><i class="bi bi-person-badge"></i> Details</span>
+      <h3>Employee Information</h3>
+    </div>
     <div class="card-body">
-
-      <app-loader
-        *ngIf="loading">
-
-      </app-loader>
-
-      <form
-        [formGroup]="employeeForm"
-        (ngSubmit)="update()">
-
+      <app-loader *ngIf="loading"></app-loader>
+      <form [formGroup]="employeeForm" (ngSubmit)="update()" *ngIf="!loading">
         <div class="row">
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              First Name
-            </label>
-
-            <input
-              type="text"
-              class="form-control"
-              formControlName=
-                "firstName">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['firstName']
-                .touched
-                &&
-                f['firstName']
-                .invalid
-              ">
-
-              First Name is required
-
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" formControlName="firstName">
+            <div class="text-danger mt-1 small" *ngIf="f['firstName'].touched && f['firstName'].invalid">
+              <div *ngIf="f['firstName'].errors?.['required']">First name is required</div>
             </div>
-
           </div>
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Last Name
-            </label>
-
-            <input
-              type="text"
-              class="form-control"
-              formControlName=
-                "lastName">
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['lastName']
-                .touched
-                &&
-                f['lastName']
-                .invalid
-              ">
-
-              Last Name is required
-
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" formControlName="lastName">
+            <div class="text-danger mt-1 small" *ngIf="f['lastName'].touched && f['lastName'].invalid">
+              <div *ngIf="f['lastName'].errors?.['required']">Last name is required</div>
             </div>
-
           </div>
-
         </div>
 
         <div class="mb-3">
-
-          <label>
-            Phone Number
-          </label>
-
-          <input
-            type="text"
-            class="form-control"
-            formControlName=
-              "phoneNumber">
-
-          <div
-            class="text-danger mt-1"
-
-            *ngIf="
-              f['phoneNumber']
-              .touched
-              &&
-              f['phoneNumber']
-              .invalid
-            ">
-
-            Valid Phone Number required
-
-          </div>
-
+          <label class="form-label">Phone Number</label>
+          <input type="text" class="form-control" formControlName="phoneNumber">
+          <div class="text-danger mt-1 small" *ngIf="f['phoneNumber'].touched && f['phoneNumber'].invalid">Valid phone number required</div>
         </div>
 
         <div class="row">
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Gender
-            </label>
-
-            <select
-              class="form-select"
-              formControlName="gender">
-
-              <option value="">
-                Select
-              </option>
-
-              <option [ngValue]="1">
-                Male
-              </option>
-
-              <option [ngValue]="2">
-                Female
-              </option>
-
-              <option [ngValue]="3">
-                Other
-              </option>
-
+            <label class="form-label">Gender</label>
+            <select class="form-select" formControlName="gender">
+              <option value="">Select</option>
+              <option [ngValue]="1">Male</option>
+              <option [ngValue]="2">Female</option>
+              <option [ngValue]="3">Other</option>
             </select>
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['gender']
-                .touched
-                &&
-                f['gender']
-                .invalid
-              ">
-
-              Gender is required
-
-            </div>
-
+            <div class="text-danger mt-1 small" *ngIf="f['gender'].touched && f['gender'].invalid">Gender is required</div>
           </div>
-
           <div class="col-md-6 mb-3">
-
-            <label>
-              Department
-            </label>
-
-            <select
-              class="form-select"
-              formControlName="departmentId">
-
-              <option [ngValue]="''">
-                Select Department
-              </option>
-
-              <option
-                *ngFor="let department of departments"
-                [ngValue]="department.departmentId">
-
-                {{ department.departmentName }}
-
-              </option>
-
+            <label class="form-label">Department</label>
+            <select class="form-select" formControlName="departmentId">
+              <option [ngValue]="''">Select Department</option>
+              <option *ngFor="let department of departments" [ngValue]="department.departmentId">{{ department.departmentName }}</option>
             </select>
-
-            <div
-              class="text-danger mt-1"
-
-              *ngIf="
-                f['departmentId']
-                .touched
-                &&
-                f['departmentId']
-                .invalid
-              ">
-
-              Department is required
-
-            </div>
-
+            <div class="text-danger mt-1 small" *ngIf="f['departmentId'].touched && f['departmentId'].invalid">Department is required</div>
           </div>
-
         </div>
 
         <div class="mb-3">
-
-          <label>
-            Role
-          </label>
-
-          <select
-            class="form-select"
-            formControlName="roleId">
-
-            <option [ngValue]="''">
-              Select Role
-            </option>
-
-            <option
-              *ngFor="let role of roles"
-              [ngValue]="role.roleId">
-
-              {{ role.roleName }}
-
-            </option>
-
+          <label class="form-label">Role</label>
+          <select class="form-select" formControlName="roleId">
+            <option [ngValue]="''">Select Role</option>
+            <option *ngFor="let role of roles" [ngValue]="role.roleId">{{ role.roleName }}</option>
           </select>
-
-          <div
-            class="text-danger mt-1"
-
-            *ngIf="
-              f['roleId']
-              .touched
-              &&
-              f['roleId']
-              .invalid
-            ">
-
-            Role is required
-
-          </div>
-
+          <div class="text-danger mt-1 small" *ngIf="f['roleId'].touched && f['roleId'].invalid">Role is required</div>
         </div>
 
-        <button
-          class="btn btn-primary"
-          type="submit">
-
-          Update
-
-        </button>
-
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-primary app-icon-btn" type="submit">
+            <i class="bi bi-check2-circle"></i><span>Update</span>
+          </button>
+          <button class="btn btn-outline-secondary app-icon-btn" type="button" routerLink="/dashboard">
+            <i class="bi bi-x-lg"></i><span>Cancel</span>
+          </button>
+        </div>
       </form>
-
     </div>
-
   </div>
-
 </div>

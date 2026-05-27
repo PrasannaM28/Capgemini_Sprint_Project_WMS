@@ -6,6 +6,8 @@ public class LeaveResponseDto
 
     public int EmpId { get; set; }
 
+    public string EmployeeName { get; set; } = string.Empty;
+
     public string LeaveType { get; set; }
         = string.Empty;
 
@@ -21,6 +23,8 @@ public class LeaveResponseDto
     public DateTime AppliedOn { get; set; }
 
     public int? ApprovedBy { get; set; }
+
+    public string ApprovedByName { get; set; } = string.Empty;
 
     public DateTime? ApprovedOn { get; set; }
 }

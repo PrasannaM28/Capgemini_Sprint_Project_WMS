@@ -1,124 +1,66 @@
 <div class="container app-page">
+  <section class="app-page__hero">
+    <div>
+      <span class="page-kicker"><i class="bi bi-calendar-plus-fill"></i> Leave</span>
+      <h1 class="page-title mt-2">Apply Leave</h1>
+    </div>
+    <div class="app-page__hero-actions">
+      <button class="btn btn-light app-icon-btn" routerLink="/leaves">
+        <i class="bi bi-arrow-left"></i><span>Back to leaves</span>
+      </button>
+    </div>
+  </section>
 
-	<section class="app-page__hero">
+  <div class="card app-page__surface" *ngIf="canApply; else restricted">
+    <div class="card-header app-page__card-title">
+      <span class="app-page__section-label"><i class="bi bi-calendar2-plus-fill"></i> Request</span>
+      <h3>New Leave Application</h3>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="leaveForm" (ngSubmit)="apply()">
+        <div class="mb-3">
+          <label class="form-label">Employee Id</label>
+          <input type="number" class="form-control" formControlName="empId">
+          <div class="text-danger mt-1 small" *ngIf="f['empId'].touched && f['empId'].invalid">Employee ID is required</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Leave Type</label>
+          <input type="text" class="form-control" formControlName="leaveType" placeholder="e.g. Sick, Vacation">
+          <div class="text-danger mt-1 small" *ngIf="f['leaveType'].touched && f['leaveType'].invalid">Leave type is required</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Reason</label>
+          <textarea class="form-control" formControlName="reason" rows="3" placeholder="Brief reason for leave"></textarea>
+          <div class="text-danger mt-1 small" *ngIf="f['reason'].touched && f['reason'].invalid">
+            <div *ngIf="f['reason'].errors?.['required']">Reason is required</div>
+            <div *ngIf="f['reason'].errors?.['minlength']">Minimum 5 characters required</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">From Date</label>
+            <input type="date" class="form-control" formControlName="fromDate">
+            <div class="text-danger mt-1 small" *ngIf="f['fromDate'].touched && f['fromDate'].invalid">From date is required</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">To Date</label>
+            <input type="date" class="form-control" formControlName="toDate">
+            <div class="text-danger mt-1 small" *ngIf="f['toDate'].touched && f['toDate'].invalid">To date is required</div>
+          </div>
+        </div>
+        <button class="btn btn-primary app-icon-btn" type="submit">
+          <i class="bi bi-send-fill"></i><span>Apply</span>
+        </button>
+      </form>
+    </div>
+  </div>
 
-		<div>
-			<span class="page-kicker">Leave operations</span>
-			<h1 class="page-title mt-3">Apply Leave</h1>
-			<p class="page-description mb-0">
-				Submit leave requests from a clearer form flow.
-			</p>
-		</div>
-
-	</section>
-
-	<div class="card app-page__surface">
-
-		<div class="card-header">
-
-			<h3>
-				Apply Leave
-			</h3>
-
-		</div>
-
-		<div class="card-body">
-
-			<div *ngIf="canApply; else restrictedLeaveMessage">
-
-				<form [formGroup]="leaveForm" (ngSubmit)="apply()">
-
-					<div class="mb-3">
-
-						<label class="form-label">
-							Employee Id
-						</label>
-
-						<input type="number" class="form-control" formControlName="empId">
-
-						<div class="text-danger mt-1" *ngIf="f['empId'].touched && f['empId'].invalid">
-							Employee Id is required
-						</div>
-
-					</div>
-
-					<div class="mb-3">
-
-						<label class="form-label">
-							Leave Type
-						</label>
-
-						<input type="text" class="form-control" formControlName="leaveType">
-
-						<div class="text-danger mt-1" *ngIf="f['leaveType'].touched && f['leaveType'].invalid">
-							Leave Type is required
-						</div>
-
-					</div>
-
-					<div class="mb-3">
-
-						<label class="form-label">
-							Reason
-						</label>
-
-						<textarea class="form-control" formControlName="reason"></textarea>
-
-						<div class="text-danger mt-1" *ngIf="f['reason'].touched && f['reason'].invalid">
-							<div *ngIf="f['reason'].errors?.['required']">Reason is required</div>
-							<div *ngIf="f['reason'].errors?.['minlength']">Minimum 5 characters required</div>
-						</div>
-
-					</div>
-
-					<div class="row">
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label">
-								From Date
-							</label>
-
-							<input type="date" class="form-control" formControlName="fromDate">
-
-							<div class="text-danger mt-1" *ngIf="f['fromDate'].touched && f['fromDate'].invalid">
-								From Date is required
-							</div>
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label">
-								To Date
-							</label>
-
-							<input type="date" class="form-control" formControlName="toDate">
-
-							<div class="text-danger mt-1" *ngIf="f['toDate'].touched && f['toDate'].invalid">
-								To Date is required
-							</div>
-
-						</div>
-
-					</div>
-
-					<button class="btn btn-primary" type="submit">
-						Apply
-					</button>
-
-				</form>
-
-			</div>
-
-			<ng-template #restrictedLeaveMessage>
-				<div class="app-page__empty mb-0">
-					Leave applications are available for employees only.
-				</div>
-			</ng-template>
-
-		</div>
-
-	</div>
-
+  <ng-template #restricted>
+    <div class="card app-page__surface">
+      <div class="card-body text-center py-5">
+        <i class="bi bi-shield-exclamation text-muted" style="font-size: 2.5rem;"></i>
+        <p class="mt-3 text-muted">Leave applications are available for employees only.</p>
+      </div>
+    </div>
+  </ng-template>
 </div>

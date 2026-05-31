@@ -10,6 +10,12 @@ namespace WMS.Application.Services;
 public class AttendanceService
     : IAttendanceService
 {
+    private static readonly string[] BusinessTimeZoneIds =
+    {
+        "India Standard Time",
+        "Asia/Kolkata"
+    };
+
     private readonly IUnitOfWork _unitOfWork;
 
     private readonly IMapper _mapper;
@@ -26,13 +32,15 @@ public class AttendanceService
     public async Task<AttendanceResponseDto>
         CheckInAsync(CreateAttendanceDto dto)
     {
+        var now = GetBusinessNow();
+
         var attendance = new Attendance
         {
             EmpId = dto.EmpId,
 
-            CheckIn = DateTime.Now,
+            CheckIn = now,
 
-            AttendanceDate = DateTime.Now.Date,
+            AttendanceDate = now.Date,
 
             WorkMode = dto.WorkMode
         };
@@ -51,6 +59,8 @@ public class AttendanceService
     public async Task<AttendanceResponseDto>
         CheckOutAsync(CheckoutAttendanceDto dto)
     {
+        var now = GetBusinessNow();
+
         var attendance =
             await _unitOfWork
                 .Attendances
@@ -62,7 +72,7 @@ public class AttendanceService
                 "Attendance not found.");
         }
 
-        attendance.CheckOut = DateTime.Now;
+        attendance.CheckOut = now;
 
         attendance.TotalHours =
             (attendance.CheckOut.Value - attendance.CheckIn)
@@ -89,6 +99,29 @@ public class AttendanceService
         return attendance == null
             ? null
             : _mapper.Map<AttendanceResponseDto>(attendance);
+    }
+
+    private static DateTime GetBusinessNow()
+    {
+        foreach (var timeZoneId in BusinessTimeZoneIds)
+        {
+            try
+            {
+                var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+
+                return TimeZoneInfo.ConvertTimeFromUtc(
+                    DateTime.UtcNow,
+                    timeZone);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+            }
+            catch (InvalidTimeZoneException)
+            {
+            }
+        }
+
+        return DateTime.UtcNow;
     }
 
     public async Task<IEnumerable<

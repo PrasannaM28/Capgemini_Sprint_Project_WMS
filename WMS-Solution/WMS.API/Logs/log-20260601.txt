@@ -1214,3 +1214,291 @@ WHERE [a].[EmpId] = @__employeeId_0 AND DATEPART(month, [a].[AttendanceDate]) = 
 2026-06-01 00:53:24.502 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
 2026-06-01 00:53:24.504 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 200 null application/json; charset=utf-8 98.7579ms
 2026-06-01 00:53:58.442 +05:30 [INF] Application is shutting down...
+2026-06-01 01:12:06.467 +05:30 [INF] Executed DbCommand (159ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Roles] AS [r]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-06-01 01:12:06.663 +05:30 [INF] Executed DbCommand (36ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-06-01 01:12:06.694 +05:30 [INF] Executed DbCommand (22ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserLogins] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-06-01 01:12:06.716 +05:30 [INF] Database seeding completed.
+2026-06-01 01:12:06.758 +05:30 [INF] User profile is available. Using 'C:\Users\LENOVO\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-01 01:12:06.936 +05:30 [INF] Now listening on: http://localhost:5291
+2026-06-01 01:12:06.941 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-01 01:12:06.950 +05:30 [INF] Hosting environment: Development
+2026-06-01 01:12:06.956 +05:30 [INF] Content root path: C:\Users\LENOVO\Desktop\Capgemini_Sprint_Project_WMS\WMS-Solution\WMS.API
+2026-06-01 01:12:44.557 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/auth/login - null null
+2026-06-01 01:12:44.711 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-06-01 01:12:44.718 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:44.731 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/auth/login - 204 null null 178.7729ms
+2026-06-01 01:12:44.745 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5291/api/auth/login - application/json 54
+2026-06-01 01:12:44.756 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:45.276 +05:30 [INF] Executed DbCommand (201ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:45.500 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AuthController.Login (WMS.API)'
+2026-06-01 01:12:45.554 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(WMS.Application.DTOs.Auth.LoginRequestDto) on controller WMS.API.Controllers.AuthController (WMS.API).
+2026-06-01 01:12:46.064 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__username_0='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[UserId], [u].[CreatedOn], [u].[LastLogin], [u].[PasswordHash], [u].[RoleId], [u].[UpdatedOn], [u].[Username], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [UserLogins] AS [u]
+INNER JOIN [Roles] AS [r] ON [u].[RoleId] = [r].[RoleId]
+WHERE [u].[Username] = @__username_0
+2026-06-01 01:12:46.888 +05:30 [INF] User logged in successfully: san@gmail.com
+2026-06-01 01:12:46.899 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[WMS.Application.DTOs.Auth.LoginResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-01 01:12:46.945 +05:30 [INF] Executed action WMS.API.Controllers.AuthController.Login (WMS.API) in 1380.1729ms
+2026-06-01 01:12:46.948 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AuthController.Login (WMS.API)'
+2026-06-01 01:12:46.955 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5291/api/auth/login - 200 null application/json; charset=utf-8 2210.1813ms
+2026-06-01 01:12:47.023 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/dashboard - null null
+2026-06-01 01:12:47.058 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:47.068 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/dashboard - 204 null null 45.5143ms
+2026-06-01 01:12:47.274 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/dashboard - null null
+2026-06-01 01:12:47.516 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:47.555 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:47.569 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.DashboardController.GetDashboard (WMS.API)'
+2026-06-01 01:12:47.585 +05:30 [INF] Route matched with {action = "GetDashboard", controller = "Dashboard"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetDashboard() on controller WMS.API.Controllers.DashboardController (WMS.API).
+2026-06-01 01:12:47.917 +05:30 [INF] Executed DbCommand (95ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:48.097 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn]
+FROM [Employees] AS [e]
+2026-06-01 01:12:48.145 +05:30 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode]
+FROM [Attendances] AS [a]
+2026-06-01 01:12:48.253 +05:30 [INF] Executed DbCommand (68ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[LeaveId], [l].[AppliedOn], [l].[ApprovedBy], [l].[ApprovedOn], [l].[CreatedOn], [l].[EmpId], [l].[FromDate], [l].[LeaveType], [l].[Reason], [l].[Status], [l].[ToDate], [l].[UpdatedOn]
+FROM [Leaves] AS [l]
+2026-06-01 01:12:48.316 +05:30 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[ProjectId], [p].[ClientId], [p].[CreatedOn], [p].[EndDate], [p].[ProjectName], [p].[StartDate], [p].[Status], [p].[UpdatedOn]
+FROM [Projects] AS [p]
+2026-06-01 01:12:48.379 +05:30 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[AllocationId], [e].[AssignedOn], [e].[CreateDate], [e].[CreatedBy], [e].[CreatedOn], [e].[EmpId], [e].[ProjectId], [e].[Status], [e].[UpdatedBy], [e].[UpdatedDate], [e].[UpdatedOn]
+FROM [EmployeeProjectAllocations] AS [e]
+2026-06-01 01:12:48.468 +05:30 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[ClientId], [c].[ClientAddress], [c].[ClientLocation], [c].[ClientName], [c].[ClientPhoneNumber], [c].[CreatedOn], [c].[Status], [c].[UpdatedOn]
+FROM [Clients] AS [c]
+2026-06-01 01:12:48.587 +05:30 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Announcements] AS [a]
+WHERE [a].[IsActive] = CAST(1 AS bit)
+2026-06-01 01:12:48.599 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[WMS.Application.DTOs.Dashboard.DashboardResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-01 01:12:48.623 +05:30 [INF] Executed action WMS.API.Controllers.DashboardController.GetDashboard (WMS.API) in 1032.382ms
+2026-06-01 01:12:48.626 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.DashboardController.GetDashboard (WMS.API)'
+2026-06-01 01:12:48.631 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/dashboard - 200 null application/json; charset=utf-8 1356.3665ms
+2026-06-01 01:12:50.903 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/employee/search?searchTerm=san@gmail.com - null null
+2026-06-01 01:12:50.940 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:50.956 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/employee/search?searchTerm=san@gmail.com - 204 null null 52.2625ms
+2026-06-01 01:12:50.974 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/employee/search?searchTerm=san@gmail.com - null null
+2026-06-01 01:12:50.997 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:51.024 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:51.046 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.EmployeeController.SearchEmployees (WMS.API)'
+2026-06-01 01:12:51.067 +05:30 [INF] Route matched with {action = "SearchEmployees", controller = "Employee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] SearchEmployees(System.String) on controller WMS.API.Controllers.EmployeeController (WMS.API).
+2026-06-01 01:12:51.121 +05:30 [INF] Executed DbCommand (16ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:51.134 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[WMS.Application.DTOs.Employee.EmployeeResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-01 01:12:51.152 +05:30 [INF] Executed action WMS.API.Controllers.EmployeeController.SearchEmployees (WMS.API) in 80.0608ms
+2026-06-01 01:12:51.155 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.EmployeeController.SearchEmployees (WMS.API)'
+2026-06-01 01:12:51.158 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/employee/search?searchTerm=san@gmail.com - 200 null application/json; charset=utf-8 184.0831ms
+2026-06-01 01:12:51.221 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:12:51.253 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:51.270 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 204 null null 48.9503ms
+2026-06-01 01:12:51.340 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:12:51.362 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:51.389 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:51.425 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:51.503 +05:30 [INF] Route matched with {action = "GetMonthlyAttendance", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMonthlyAttendance(Int32, Int32, Int32) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:12:51.602 +05:30 [INF] Executed DbCommand (28ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:51.724 +05:30 [INF] Executed DbCommand (29ms) [Parameters=[@__employeeId_0='?' (DbType = Int32), @__month_1='?' (DbType = Int32), @__year_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode], [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn]
+FROM [Attendances] AS [a]
+INNER JOIN [Employees] AS [e] ON [a].[EmpId] = [e].[EmployeeId]
+WHERE [a].[EmpId] = @__employeeId_0 AND DATEPART(month, [a].[AttendanceDate]) = @__month_1 AND DATEPART(year, [a].[AttendanceDate]) = @__year_2
+2026-06-01 01:12:51.760 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-01 01:12:51.798 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API) in 257.6252ms
+2026-06-01 01:12:51.802 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:51.805 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 200 null application/json; charset=utf-8 464.6926ms
+2026-06-01 01:12:54.179 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/checkin - null null
+2026-06-01 01:12:54.219 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:54.223 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/checkin - 204 null null 43.7212ms
+2026-06-01 01:12:54.238 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5291/api/attendance/checkin - application/json 61
+2026-06-01 01:12:54.251 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:54.256 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:54.270 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.CheckIn (WMS.API)'
+2026-06-01 01:12:54.281 +05:30 [INF] Route matched with {action = "CheckIn", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CheckIn(WMS.Application.DTOs.Attendance.CreateAttendanceDto) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:12:54.320 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:54.435 +05:30 [INF] Executed DbCommand (32ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = Int32), @p5='?' (Size = 5) (DbType = Double), @p6='?' (DbType = DateTime2), @p7='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Attendances] ([AttendanceDate], [CheckIn], [CheckOut], [CreatedOn], [EmpId], [TotalHours], [UpdatedOn], [WorkMode])
+OUTPUT INSERTED.[AttendanceId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+2026-06-01 01:12:54.453 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-01 01:12:54.458 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.CheckIn (WMS.API) in 172.8093ms
+2026-06-01 01:12:54.469 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.CheckIn (WMS.API)'
+2026-06-01 01:12:54.471 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5291/api/attendance/checkin - 200 null application/json; charset=utf-8 232.6164ms
+2026-06-01 01:12:54.485 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:12:54.500 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:54.516 +05:30 [INF] Executed DbCommand (10ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:54.521 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:54.524 +05:30 [INF] Route matched with {action = "GetMonthlyAttendance", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMonthlyAttendance(Int32, Int32, Int32) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:12:54.538 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:54.556 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@__employeeId_0='?' (DbType = Int32), @__month_1='?' (DbType = Int32), @__year_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode], [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn]
+FROM [Attendances] AS [a]
+INNER JOIN [Employees] AS [e] ON [a].[EmpId] = [e].[EmployeeId]
+WHERE [a].[EmpId] = @__employeeId_0 AND DATEPART(month, [a].[AttendanceDate]) = @__month_1 AND DATEPART(year, [a].[AttendanceDate]) = @__year_2
+2026-06-01 01:12:54.583 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-01 01:12:54.588 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API) in 52.2913ms
+2026-06-01 01:12:54.601 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:54.606 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 200 null application/json; charset=utf-8 121.2347ms
+2026-06-01 01:12:57.353 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/checkout - null null
+2026-06-01 01:12:57.416 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:57.422 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/checkout - 204 null null 68.8299ms
+2026-06-01 01:12:57.453 +05:30 [INF] Request starting HTTP/1.1 PUT http://localhost:5291/api/attendance/checkout - application/json 57
+2026-06-01 01:12:57.488 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:57.502 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:57.513 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.CheckOut (WMS.API)'
+2026-06-01 01:12:57.526 +05:30 [INF] Route matched with {action = "CheckOut", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CheckOut(WMS.Application.DTOs.Attendance.CheckoutAttendanceDto) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:12:57.555 +05:30 [INF] Executed DbCommand (15ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:57.577 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode]
+FROM [Attendances] AS [a]
+WHERE [a].[AttendanceId] = @__p_0
+2026-06-01 01:12:57.618 +05:30 [INF] Executed DbCommand (19ms) [Parameters=[@p8='?' (DbType = Int32), @p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = Int32), @p5='?' (Size = 5) (DbType = Double), @p6='?' (DbType = DateTime2), @p7='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Attendances] SET [AttendanceDate] = @p0, [CheckIn] = @p1, [CheckOut] = @p2, [CreatedOn] = @p3, [EmpId] = @p4, [TotalHours] = @p5, [UpdatedOn] = @p6, [WorkMode] = @p7
+OUTPUT 1
+WHERE [AttendanceId] = @p8;
+2026-06-01 01:12:57.630 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-01 01:12:57.633 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.CheckOut (WMS.API) in 101.5683ms
+2026-06-01 01:12:57.635 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.CheckOut (WMS.API)'
+2026-06-01 01:12:57.638 +05:30 [INF] Request finished HTTP/1.1 PUT http://localhost:5291/api/attendance/checkout - 200 null application/json; charset=utf-8 184.6337ms
+2026-06-01 01:12:57.654 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:12:57.666 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:57.674 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 204 null null 20.0645ms
+2026-06-01 01:12:57.696 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:12:57.705 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:12:57.711 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:12:57.724 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:57.732 +05:30 [INF] Route matched with {action = "GetMonthlyAttendance", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMonthlyAttendance(Int32, Int32, Int32) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:12:57.745 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:12:57.769 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@__employeeId_0='?' (DbType = Int32), @__month_1='?' (DbType = Int32), @__year_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode], [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn]
+FROM [Attendances] AS [a]
+INNER JOIN [Employees] AS [e] ON [a].[EmpId] = [e].[EmployeeId]
+WHERE [a].[EmpId] = @__employeeId_0 AND DATEPART(month, [a].[AttendanceDate]) = @__month_1 AND DATEPART(year, [a].[AttendanceDate]) = @__year_2
+2026-06-01 01:12:57.777 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-01 01:12:57.786 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API) in 45.4679ms
+2026-06-01 01:12:57.789 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:12:57.796 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 200 null application/json; charset=utf-8 100.6088ms
+2026-06-01 01:13:00.898 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - null null
+2026-06-01 01:13:00.906 +05:30 [INF] CORS policy execution successful.
+2026-06-01 01:13:00.934 +05:30 [INF] Executed DbCommand (11ms) [Parameters=[@p0='?' (Size = 20), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AuditLogs] ([Action], [CreatedBy], [CreatedOn], [EntityName], [RecordId], [UpdatedOn])
+OUTPUT INSERTED.[AuditId]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2026-06-01 01:13:00.939 +05:30 [INF] Executing endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:13:00.950 +05:30 [INF] Route matched with {action = "GetMonthlyAttendance", controller = "Attendance"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMonthlyAttendance(Int32, Int32, Int32) on controller WMS.API.Controllers.AttendanceController (WMS.API).
+2026-06-01 01:13:01.423 +05:30 [INF] Executed DbCommand (20ms) [Parameters=[@__searchTerm_0_contains='?' (Size = 50), @__searchTerm_0_contains_1='?' (Size = 80), @__searchTerm_0_contains_2='?' (Size = 100), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn], [d].[DepartmentId], [d].[CreatedOn], [d].[DepartmentName], [d].[Description], [d].[UpdatedOn], [r].[RoleId], [r].[CreatedOn], [r].[Description], [r].[RoleName], [r].[UpdatedOn]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[DepartmentId]
+INNER JOIN [Roles] AS [r] ON [e].[RoleId] = [r].[RoleId]
+WHERE LOWER([e].[FirstName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[LastName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR LOWER([e].[Email]) LIKE @__searchTerm_0_contains_1 ESCAPE N'\' OR LOWER([d].[DepartmentName]) LIKE @__searchTerm_0_contains_2 ESCAPE N'\' OR LOWER([r].[RoleName]) LIKE @__searchTerm_0_contains ESCAPE N'\' OR [e].[EmployeeId] = @__p_1
+2026-06-01 01:13:01.462 +05:30 [INF] Executed DbCommand (9ms) [Parameters=[@__employeeId_0='?' (DbType = Int32), @__month_1='?' (DbType = Int32), @__year_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[AttendanceId], [a].[AttendanceDate], [a].[CheckIn], [a].[CheckOut], [a].[CreatedOn], [a].[EmpId], [a].[TotalHours], [a].[UpdatedOn], [a].[WorkMode], [e].[EmployeeId], [e].[CreatedOn], [e].[DOB], [e].[DOJ], [e].[DepartmentId], [e].[Email], [e].[FirstName], [e].[Gender], [e].[LastName], [e].[PhoneNumber], [e].[RoleId], [e].[Status], [e].[UpdatedOn]
+FROM [Attendances] AS [a]
+INNER JOIN [Employees] AS [e] ON [a].[EmpId] = [e].[EmployeeId]
+WHERE [a].[EmpId] = @__employeeId_0 AND DATEPART(month, [a].[AttendanceDate]) = @__month_1 AND DATEPART(year, [a].[AttendanceDate]) = @__year_2
+2026-06-01 01:13:01.475 +05:30 [INF] Executing OkObjectResult, writing value of type 'WMS.Application.Common.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[WMS.Application.DTOs.Attendance.AttendanceResponseDto, WMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-01 01:13:01.488 +05:30 [INF] Executed action WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API) in 88.233ms
+2026-06-01 01:13:01.503 +05:30 [INF] Executed endpoint 'WMS.API.Controllers.AttendanceController.GetMonthlyAttendance (WMS.API)'
+2026-06-01 01:13:01.505 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5291/api/attendance/monthly?employeeId=6&month=6&year=2026 - 200 null application/json; charset=utf-8 606.7037ms
+2026-06-01 01:13:11.665 +05:30 [INF] Application is shutting down...

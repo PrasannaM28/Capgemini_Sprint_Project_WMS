@@ -11,7 +11,11 @@ import {
 }
 from '@angular/forms';
 
-import { forkJoin }
+import {
+  catchError,
+  forkJoin,
+  of
+}
 from 'rxjs';
 
 import { Attendance }
@@ -51,6 +55,8 @@ implements OnInit {
   currentEmployeeId = 0;
 
   currentEmployeeDepartmentId = 0;
+
+  currentEmployeeAttendanceRecords: any[] = [];
 
   attendanceRecords: any[] = [];
 
@@ -139,7 +145,7 @@ implements OnInit {
 
   get openAttendance(): any {
 
-    return [...this.attendanceRecords]
+    return [...this.currentEmployeeAttendanceRecords]
       .filter(record =>
         Number(record.empId) === Number(this.currentEmployeeId))
       .sort((a, b) =>
@@ -237,10 +243,16 @@ implements OnInit {
         {
           this.loading = false;
 
-          this.attendanceRecords =
+          this.currentEmployeeAttendanceRecords =
             [...(response.data ?? [])].sort((left: any, right: any) =>
               new Date(right.checkIn ?? 0).getTime() - new Date(left.checkIn ?? 0).getTime()
             );
+
+          if (this.role === 'Employee')
+          {
+            this.attendanceRecords =
+              [...this.currentEmployeeAttendanceRecords];
+          }
         },
         error: () =>
         {
@@ -304,6 +316,9 @@ implements OnInit {
               employee.employeeId,
               month,
               year
+            )
+            .pipe(
+              catchError(() => of({ data: [] }))
             )
       );
 
@@ -406,9 +421,28 @@ implements OnInit {
     this.attendanceService
       .checkIn(payload)
       .subscribe({
-        next: () =>
+        next: (response) =>
         {
           this.loading = false;
+
+          const createdAttendance = response?.data ?? response;
+
+          if (createdAttendance)
+          {
+            this.currentEmployeeAttendanceRecords = [
+              createdAttendance,
+              ...this.currentEmployeeAttendanceRecords.filter(record =>
+                Number(record.attendanceId) !== Number(createdAttendance.attendanceId))
+            ].sort((left: any, right: any) =>
+              new Date(right.checkIn ?? 0).getTime() - new Date(left.checkIn ?? 0).getTime()
+            );
+
+            if (this.role === 'Employee')
+            {
+              this.attendanceRecords =
+                [...this.currentEmployeeAttendanceRecords];
+            }
+          }
 
           this.feedback.success(
             'Checked in',
@@ -447,9 +481,27 @@ implements OnInit {
         checkOut: new Date()
       })
       .subscribe({
-        next: () =>
+        next: (response) =>
         {
           this.loading = false;
+
+          const updatedAttendance = response?.data ?? response;
+
+          if (updatedAttendance)
+          {
+            this.currentEmployeeAttendanceRecords =
+              this.currentEmployeeAttendanceRecords.map(record =>
+                Number(record.attendanceId) === Number(updatedAttendance.attendanceId)
+                  ? updatedAttendance
+                  : record
+              );
+
+            if (this.role === 'Employee')
+            {
+              this.attendanceRecords =
+                [...this.currentEmployeeAttendanceRecords];
+            }
+          }
 
           this.feedback.info(
             'Checked out',

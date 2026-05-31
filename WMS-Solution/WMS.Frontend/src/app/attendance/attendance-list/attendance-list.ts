@@ -50,6 +50,8 @@ implements OnInit {
 
   currentEmployeeId = 0;
 
+  currentEmployeeDepartmentId = 0;
+
   attendanceRecords: any[] = [];
 
   searchForm: FormGroup;
@@ -139,7 +141,7 @@ implements OnInit {
 
     return [...this.attendanceRecords]
       .filter(record =>
-        record.empId === this.currentEmployeeId)
+        Number(record.empId) === Number(this.currentEmployeeId))
       .sort((a, b) =>
         new Date(b.checkIn).getTime() -
         new Date(a.checkIn).getTime())
@@ -168,6 +170,9 @@ implements OnInit {
           this.currentEmployeeId =
             exact?.employeeId ?? 0;
 
+          this.currentEmployeeDepartmentId =
+            exact?.departmentId ?? 0;
+
           if (this.currentEmployeeId > 0)
           {
             this.attendanceForm
@@ -179,10 +184,7 @@ implements OnInit {
               .get('empId')
               ?.disable();
 
-              if (this.role === 'Employee')
-              {
-                this.loadOwnAttendance();
-              }
+            this.refreshAttendanceData();
           }
         }
       });
@@ -200,7 +202,7 @@ implements OnInit {
           this.visibleEmployees =
             response.data ?? [];
 
-          this.loadAttendanceForVisibleEmployees();
+          this.refreshAttendanceData();
         },
         error: () =>
         {
@@ -247,6 +249,27 @@ implements OnInit {
       });
   }
 
+  private refreshAttendanceData(): void {
+
+    if (this.role === 'Employee')
+    {
+      this.loadOwnAttendance();
+      return;
+    }
+
+    if (this.role === 'Manager' && !this.currentEmployeeDepartmentId)
+    {
+      return;
+    }
+
+    if (this.visibleEmployees.length === 0)
+    {
+      return;
+    }
+
+    this.loadAttendanceForVisibleEmployees();
+  }
+
   loadAttendanceForVisibleEmployees(): void {
 
     if (this.reportForm.invalid)
@@ -266,8 +289,15 @@ implements OnInit {
     const year =
       this.reportForm.value.year;
 
+    const employees =
+      this.role === 'Manager'
+        ? this.visibleEmployees.filter(employee =>
+            Number(employee.departmentId) ===
+            Number(this.currentEmployeeDepartmentId))
+        : this.visibleEmployees;
+
     const requests =
-      this.visibleEmployees.map(
+      employees.map(
         employee =>
           this.attendanceService
             .getMonthlyAttendance(
@@ -392,14 +422,7 @@ implements OnInit {
               empId: this.currentEmployeeId
             });
 
-          if (this.role === 'Employee')
-          {
-            this.loadOwnAttendance();
-          }
-          else
-          {
-            this.loadAttendanceForVisibleEmployees();
-          }
+          this.refreshAttendanceData();
         },
         error: () =>
         {
@@ -433,14 +456,7 @@ implements OnInit {
             'Attendance has been closed for the day.'
           );
 
-          if (this.role === 'Employee')
-          {
-            this.loadOwnAttendance();
-          }
-          else
-          {
-            this.loadAttendanceForVisibleEmployees();
-          }
+          this.refreshAttendanceData();
         },
         error: () =>
         {

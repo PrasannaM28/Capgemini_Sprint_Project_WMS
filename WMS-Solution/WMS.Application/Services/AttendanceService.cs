@@ -79,6 +79,18 @@ public class AttendanceService
             AttendanceResponseDto>(attendance);
     }
 
+    public async Task<AttendanceResponseDto?>
+        GetAttendanceByIdAsync(int attendanceId)
+    {
+        var attendance = await _unitOfWork
+            .Attendances
+            .GetByIdAsync(attendanceId);
+
+        return attendance == null
+            ? null
+            : _mapper.Map<AttendanceResponseDto>(attendance);
+    }
+
     public async Task<IEnumerable<
         AttendanceResponseDto>>
         GetMonthlyAttendanceAsync(

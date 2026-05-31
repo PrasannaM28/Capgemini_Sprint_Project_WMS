@@ -10,6 +10,9 @@ public interface IAttendanceService
     Task<AttendanceResponseDto>
         CheckOutAsync(CheckoutAttendanceDto dto);
 
+    Task<AttendanceResponseDto?>
+        GetAttendanceByIdAsync(int attendanceId);
+
     Task<IEnumerable<AttendanceResponseDto>>
         GetMonthlyAttendanceAsync(
             int employeeId,

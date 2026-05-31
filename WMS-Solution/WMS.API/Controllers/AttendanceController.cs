@@ -65,14 +65,12 @@ public class AttendanceController : ControllerBase
             return Forbid();
         }
 
-        var currentMonthAttendance =
-            await _attendanceService.GetMonthlyAttendanceAsync(
-                currentEmployee.EmployeeId,
-                DateTime.Now.Month,
-                DateTime.Now.Year);
+        var attendance =
+            await _attendanceService
+                .GetAttendanceByIdAsync(dto.AttendanceId);
 
-        if (!currentMonthAttendance.Any(a =>
-            a.AttendanceId == dto.AttendanceId))
+        if (attendance == null ||
+            attendance.EmpId != currentEmployee.EmployeeId)
         {
             return Forbid();
         }

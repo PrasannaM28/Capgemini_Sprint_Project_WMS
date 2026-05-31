@@ -1,85 +1,47 @@
 <div class="auth-shell">
-  <div class="container auth-shell__container">
-    <div class="row g-4 align-items-stretch justify-content-center min-vh-100 py-5">
-      <div class="col-lg-4 d-flex">
-        <div class="auth-panel w-100">
-          <div class="auth-panel__inner">
-            <span class="page-kicker bg-white bg-opacity-10 text-white border-0"><i class="bi bi-shield-check"></i> Secure Access</span>
-            <h1 class="auth-panel__title">Workflow<br>Management</h1>
-            <p class="auth-panel__copy">Manage attendance, leave, employees, projects, and clients from a single workspace.</p>
-            <div class="auth-panel__features">
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <i class="bi bi-people-fill fs-4 opacity-75"></i>
-                <div>
-                  <strong class="d-block">Employee Management</strong>
-                  <small class="opacity-75">Full roster and profile control</small>
-                </div>
-              </div>
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <i class="bi bi-clock-fill fs-4 opacity-75"></i>
-                <div>
-                  <strong class="d-block">Time & Attendance</strong>
-                  <small class="opacity-75">Check-in/out and timesheets</small>
-                </div>
-              </div>
-              <div class="d-flex align-items-center gap-3">
-                <i class="bi bi-folder-fill fs-4 opacity-75"></i>
-                <div>
-                  <strong class="d-block">Project Tracking</strong>
-                  <small class="opacity-75">Delivery and team allocations</small>
-                </div>
-              </div>
-            </div>
+  <div class="auth-card">
+    <div class="auth-card__body">
+      <div class="text-center mb-4">
+        <div class="auth-logo mx-auto mb-3">
+          <i class="bi bi-box-seam-fill fs-1"></i>
+        </div>
+        <h2 class="auth-form-title">Welcome back</h2>
+        <p class="auth-form-subtitle">Sign in to your account</p>
+      </div>
+      <app-loader *ngIf="loading"></app-loader>
+      <div *ngIf="errorMessage" class="auth-inline-alert mb-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" formControlName="username" placeholder="Enter your username">
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="f['username'].touched && f['username'].invalid">
+            <div *ngIf="f['username'].errors?.['required']">Username is required</div>
+            <div *ngIf="f['username'].errors?.['minlength']">Minimum 3 characters required</div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-4 d-flex">
-        <div class="card auth-card w-100">
-          <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-center">
-            <div class="text-center mb-4">
-              <div class="auth-logo mx-auto mb-3">
-                <i class="bi bi-box-seam-fill fs-1"></i>
-              </div>
-              <h2 class="auth-form-title">Welcome back</h2>
-              <p class="auth-form-subtitle">Sign in to your account</p>
-            </div>
-            <app-loader *ngIf="loading"></app-loader>
-            <div *ngIf="errorMessage" class="auth-inline-alert mb-3">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
-            </div>
-            <form [formGroup]="loginForm" (ngSubmit)="login()">
-              <div class="mb-3">
-                <label class="form-label">Username</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person"></i></span>
-                  <input type="text" class="form-control border-start-0 ps-0" formControlName="username" placeholder="Enter your username">
-                </div>
-                <div class="text-danger mt-1 small" *ngIf="f['username'].touched && f['username'].invalid">
-                  <div *ngIf="f['username'].errors?.['required']">Username is required</div>
-                  <div *ngIf="f['username'].errors?.['minlength']">Minimum 3 characters required</div>
-                </div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Password</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-lock"></i></span>
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control border-start-0 ps-0" formControlName="password" placeholder="Enter your password" autocomplete="current-password">
-                  <button type="button" class="btn btn-outline-secondary auth-password-toggle" (click)="togglePassword()">
-                    <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                  </button>
-                </div>
-                <div class="text-danger mt-1 small" *ngIf="f['password'].touched && f['password'].invalid">
-                  <div *ngIf="f['password'].errors?.['required']">Password is required</div>
-                  <div *ngIf="f['password'].errors?.['minlength']">Minimum 6 characters required</div>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary w-100 btn-lg" [disabled]="loading">
-                <i class="bi bi-box-arrow-in-right me-2"></i>{{ loading ? 'Signing in...' : 'Sign In' }}
-              </button>
-            </form>
+        <div class="mb-4">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-lock"></i></span>
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control border-start-0 ps-0" formControlName="password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" class="btn btn-outline-secondary auth-password-toggle" (click)="togglePassword()">
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="f['password'].touched && f['password'].invalid">
+            <div *ngIf="f['password'].errors?.['required']">Password is required</div>
+            <div *ngIf="f['password'].errors?.['minlength']">Minimum 6 characters required</div>
           </div>
         </div>
-      </div>
+        <button type="submit" class="btn btn-primary w-100 btn-lg" [disabled]="loading">
+          <i class="bi bi-box-arrow-in-right me-2"></i>{{ loading ? 'Signing in...' : 'Sign In' }}
+        </button>
+      </form>
     </div>
   </div>
 </div>

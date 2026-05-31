@@ -20,10 +20,26 @@
       <app-loader *ngIf="loading"></app-loader>
       <form [formGroup]="allocationForm" (ngSubmit)="assign()" *ngIf="!loading">
         <div class="mb-3">
+          <label class="form-label">Role</label>
+          <select class="form-select" formControlName="roleId" (change)="onRoleChange()">
+            <option [ngValue]="null">Select role</option>
+            <option *ngFor="let role of roles" [ngValue]="role.roleId">{{ role.roleName }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Department</label>
+          <select class="form-select" formControlName="departmentId" (change)="onDepartmentChange()">
+            <option [ngValue]="null">Select department</option>
+            <option *ngFor="let dept of departments" [ngValue]="dept.departmentId">{{ dept.departmentName }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Employee</label>
           <select class="form-select" formControlName="empId">
             <option [ngValue]="null">Select employee</option>
-            <option *ngFor="let employee of employees" [ngValue]="employee.employeeId">{{ employee.fullName }}</option>
+            <option *ngFor="let employee of filteredEmployees" [ngValue]="employee.employeeId">{{ employee.fullName }}</option>
           </select>
         </div>
 

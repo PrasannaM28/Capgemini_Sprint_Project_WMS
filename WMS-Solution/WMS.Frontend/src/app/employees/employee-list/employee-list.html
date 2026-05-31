@@ -43,14 +43,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let employee of employees">
+            <tr *ngFor="let employee of filteredEmployees">
               <td>
-                <div class="d-flex align-items-center gap-2">
-                  <div class="rounded-circle bg-primary-soft d-flex align-items-center justify-content-center" style="width: 2.2rem; height: 2.2rem;">
-                    <span class="fw-bold text-primary" style="font-size: 0.85rem;">{{ employee.fullName?.charAt(0) || '?' }}</span>
-                  </div>
-                  <span class="fw-bold">{{ employee.fullName }}</span>
-                </div>
+                <span class="fw-bold">{{ employee.fullName }}</span>
               </td>
               <td>{{ employee.email }}</td>
               <td>{{ employee.phoneNumber }}</td>

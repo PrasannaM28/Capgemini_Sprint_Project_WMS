@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Allocation } from '../../services/allocation';
 import { Auth } from '../../services/auth';
 import { Project } from '../../services/project';
+import { Department } from '../../services/department';
+import { RoleService } from '../../services/role';
 import { UiFeedbackService } from '../../shared/ui-feedback/ui-feedback.service';
 
 @Component({
@@ -19,29 +21,74 @@ export class ProjectAllocationsAssign implements OnInit {
 
   employees: any[] = [];
 
+  roles: any[] = [];
+
+  departments: any[] = [];
+
   projects: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private allocationService: Allocation,
     private projectService: Project,
+    private departmentService: Department,
+    private roleService: RoleService,
     private authService: Auth,
     private router: Router,
     private feedback: UiFeedbackService
   ) {
     this.allocationForm = this.fb.group({
+      roleId: [null],
+      departmentId: [null],
       empId: [null, Validators.required],
       projectId: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
+    this.loadRoles();
+    this.loadDepartments();
     this.loadAssignableEmployees();
     this.loadProjects();
   }
 
   get af() {
     return this.allocationForm.controls;
+  }
+
+  get filteredEmployees(): any[] {
+    const roleId = this.allocationForm.value.roleId;
+    const departmentId = this.allocationForm.value.departmentId;
+
+    return this.employees.filter(employee => {
+      const matchRole = !roleId || employee.roleId === roleId;
+      const matchDept = !departmentId || employee.departmentId === departmentId;
+      return matchRole && matchDept;
+    });
+  }
+
+  onRoleChange(): void {
+    this.allocationForm.patchValue({ empId: null });
+  }
+
+  onDepartmentChange(): void {
+    this.allocationForm.patchValue({ empId: null });
+  }
+
+  loadRoles(): void {
+    this.roleService.getAll().subscribe({
+      next: (response) => {
+        this.roles = response.data ?? [];
+      },
+    });
+  }
+
+  loadDepartments(): void {
+    this.departmentService.getAll().subscribe({
+      next: (response) => {
+        this.departments = response.data ?? [];
+      },
+    });
   }
 
   loadAssignableEmployees(): void {
@@ -69,7 +116,8 @@ export class ProjectAllocationsAssign implements OnInit {
     this.loading = true;
 
     const payload = {
-      ...this.allocationForm.value,
+      empId: this.allocationForm.value.empId,
+      projectId: this.allocationForm.value.projectId,
       createdBy: this.authService.getUsername(),
     };
 

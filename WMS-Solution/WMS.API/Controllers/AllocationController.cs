@@ -97,7 +97,7 @@ public class AllocationController
     public async Task<IActionResult> GetProjectAllocations(int projectId)
     {
         var allocations = await _unitOfWork.Allocations.GetAllAsync();
-        var employees = await _unitOfWork.Employees.GetAllAsync();
+        var employees = await _unitOfWork.Employees.GetAllEmployeesWithDetailsAsync();
         var projects = await _unitOfWork.Projects.GetAllAsync();
 
         var result = allocations
@@ -112,6 +112,55 @@ public class AllocationController
                     AllocationId = allocation.AllocationId,
                     EmpId = allocation.EmpId,
                     EmployeeName = employee == null ? string.Empty : $"{employee.FirstName} {employee.LastName}",
+                    RoleName = employee?.Role?.RoleName ?? string.Empty,
+                    DepartmentName = employee?.Department?.DepartmentName ?? string.Empty,
+                    ProjectId = allocation.ProjectId,
+                    ProjectName = project?.ProjectName ?? string.Empty,
+                    AssignedOn = allocation.AssignedOn
+                };
+            })
+            .ToList();
+
+        return Ok(ApiResponse<IEnumerable<ProjectAllocationResponseDto>>.SuccessResponse(result));
+    }
+
+    [HttpGet("my-project-allocations")]
+    [Authorize(Roles = "Manager")]
+    public async Task<IActionResult> GetMyProjectAllocations()
+    {
+        var currentEmployee = await ResolveCurrentEmployeeAsync();
+
+        if (currentEmployee == null)
+        {
+            return Forbid();
+        }
+
+        var allAllocations = await _unitOfWork.Allocations.GetAllAsync();
+        var employees = await _unitOfWork.Employees.GetAllEmployeesWithDetailsAsync();
+        var projects = await _unitOfWork.Projects.GetAllAsync();
+
+        var myProjectIds = allAllocations
+            .Where(a => a.EmpId == currentEmployee.EmployeeId && a.Status)
+            .Select(a => a.ProjectId)
+            .ToHashSet();
+
+        var result = allAllocations
+            .Where(allocation =>
+                myProjectIds.Contains(allocation.ProjectId) &&
+                allocation.Status &&
+                allocation.EmpId != currentEmployee.EmployeeId)
+            .Select(allocation =>
+            {
+                var employee = employees.FirstOrDefault(item => item.EmployeeId == allocation.EmpId);
+                var project = projects.FirstOrDefault(item => item.ProjectId == allocation.ProjectId);
+
+                return new ProjectAllocationResponseDto
+                {
+                    AllocationId = allocation.AllocationId,
+                    EmpId = allocation.EmpId,
+                    EmployeeName = employee == null ? string.Empty : $"{employee.FirstName} {employee.LastName}",
+                    RoleName = employee?.Role?.RoleName ?? string.Empty,
+                    DepartmentName = employee?.Department?.DepartmentName ?? string.Empty,
                     ProjectId = allocation.ProjectId,
                     ProjectName = project?.ProjectName ?? string.Empty,
                     AssignedOn = allocation.AssignedOn

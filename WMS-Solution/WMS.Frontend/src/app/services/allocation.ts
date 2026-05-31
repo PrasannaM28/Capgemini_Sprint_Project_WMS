@@ -23,6 +23,10 @@ export class Allocation {
     return this.http.get(`${this.apiUrl}/project/${projectId}`);
   }
 
+  getMyProjectAllocations(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/my-project-allocations`);
+  }
+
   deassign(projectId: number, empId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/project/${projectId}/employee/${empId}`);
   }

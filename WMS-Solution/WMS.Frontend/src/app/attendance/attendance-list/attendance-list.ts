@@ -101,7 +101,8 @@ implements OnInit {
       });
 
     this.searchForm = this.fb.group({
-      employeeName: ['']
+      employeeName: [''],
+      minHours: ['']
     });
   }
 
@@ -308,17 +309,32 @@ implements OnInit {
   get filteredAttendanceRecords(): any[] {
     const employeeTerm = String(this.searchForm.value.employeeName ?? '').trim().toLowerCase();
     const attendanceDate = this.reportForm.value.attendanceDate;
+    const minHours = Number(this.searchForm.value.minHours);
 
     return this.attendanceRecords.filter(record => {
       const matchesEmployee = !employeeTerm || String(record.employeeName ?? '').toLowerCase().includes(employeeTerm);
       const matchesDate = !attendanceDate || this.formatDate(record.checkIn) === attendanceDate;
+      const matchesHours = !minHours || minHours <= 0 || (record.totalHours != null && record.totalHours < minHours);
 
-      return matchesEmployee && matchesDate;
+      return matchesEmployee && matchesDate && matchesHours;
     });
   }
 
   search(): void {
     this.attendanceRecords = [...this.attendanceRecords];
+  }
+
+  formatHours(totalHours: number): string {
+    if (totalHours == null || totalHours < 0) {
+      return '-';
+    }
+
+    const totalSeconds = Math.round(totalHours * 3600);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
   private formatDate(value: any): string {

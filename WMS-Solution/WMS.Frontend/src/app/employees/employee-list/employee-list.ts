@@ -76,6 +76,21 @@ export class EmployeeList implements OnInit {
     });
   }
 
+  get filteredEmployees(): any[] {
+    const term = String(this.searchForm.value.searchTerm ?? '').trim().toLowerCase();
+
+    if (!term) {
+      return this.employees;
+    }
+
+    return this.employees.filter(employee =>
+      String(employee.fullName ?? '').toLowerCase().includes(term) ||
+      String(employee.email ?? '').toLowerCase().includes(term) ||
+      String(employee.departmentName ?? '').toLowerCase().includes(term) ||
+      String(employee.roleName ?? '').toLowerCase().includes(term)
+    );
+  }
+
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.totalRecords / this.pageSize));
   }
@@ -96,26 +111,7 @@ export class EmployeeList implements OnInit {
   }
 
   search(): void {
-    const term = this.searchForm.value.searchTerm;
-
-    if (!term.trim()) {
-      this.pageNumber = 1;
-      this.loadEmployees();
-      return;
-    }
-
-    this.pageNumber = 1;
-    this.loading = true;
-
-    this.employeeService.search(term).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.employees = response.data;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+    this.employees = [...this.employees];
   }
 
   nextPage(): void {

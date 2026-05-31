@@ -57,6 +57,21 @@ export class ProjectAllocations implements OnInit {
   loadProjectAllocations(): void {
     this.loading = true;
 
+    if (this.role === 'Manager') {
+      this.allocationService.getMyProjectAllocations().subscribe({
+        next: (response) => {
+          this.projectAllocations = (response.data ?? []).sort((left: any, right: any) =>
+            new Date(right.assignedOn ?? 0).getTime() - new Date(left.assignedOn ?? 0).getTime()
+          );
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
+      return;
+    }
+
     this.projectService.getAll().subscribe({
       next: (response) => {
         this.projects = response.data ?? [];
@@ -100,7 +115,9 @@ export class ProjectAllocations implements OnInit {
 
     return this.projectAllocations.filter(allocation =>
       String(allocation.employeeName ?? '').toLowerCase().includes(term) ||
-      String(allocation.projectName ?? '').toLowerCase().includes(term)
+      String(allocation.projectName ?? '').toLowerCase().includes(term) ||
+      String(allocation.roleName ?? '').toLowerCase().includes(term) ||
+      String(allocation.departmentName ?? '').toLowerCase().includes(term)
     );
   }
 

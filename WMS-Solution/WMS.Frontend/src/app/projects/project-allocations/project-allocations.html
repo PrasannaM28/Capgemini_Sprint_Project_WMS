@@ -35,6 +35,8 @@
             <tr>
               <th>Project</th>
               <th>Employee</th>
+              <th>Role</th>
+              <th>Department</th>
               <th>Assigned On</th>
               <th class="text-end" *ngIf="canAssignTeam">Actions</th>
             </tr>
@@ -43,6 +45,8 @@
             <tr *ngFor="let allocation of filteredProjectAllocations">
               <td><span class="fw-bold">{{ allocation.projectName }}</span></td>
               <td>{{ allocation.employeeName }}</td>
+              <td>{{ allocation.roleName }}</td>
+              <td>{{ allocation.departmentName }}</td>
               <td class="text-muted">{{ allocation.assignedOn ? (allocation.assignedOn | date:'mediumDate') : '-' }}</td>
               <td *ngIf="canAssignTeam" class="text-end">
                 <button class="btn btn-sm btn-outline-danger app-icon-btn app-icon-btn--compact" type="button" (click)="deassignMember(allocation)">

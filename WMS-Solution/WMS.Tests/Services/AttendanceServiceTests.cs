@@ -11,6 +11,12 @@ namespace WMS.Tests.Services;
 
 public class AttendanceServiceTests
 {
+    private static readonly string[] BusinessTimeZoneIds =
+    {
+        "India Standard Time",
+        "Asia/Kolkata"
+    };
+
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     private readonly Mock<IAttendanceRepository> _attendanceRepositoryMock;
@@ -38,9 +44,9 @@ public class AttendanceServiceTests
     }
 
     [Fact]
-    public async Task CheckInAsync_ShouldStampServerLocalTime()
+    public async Task CheckInAsync_ShouldStampBusinessLocalTime()
     {
-        var start = DateTime.Now;
+        var start = GetBusinessNow();
 
         _attendanceRepositoryMock
             .Setup(x => x.AddAsync(It.IsAny<Attendance>()))
@@ -65,7 +71,7 @@ public class AttendanceServiceTests
             CheckIn = DateTime.UtcNow.AddHours(-3)
         });
 
-        var end = DateTime.Now;
+        var end = GetBusinessNow();
 
         Assert.InRange(result.CheckIn, start.AddSeconds(-2), end.AddSeconds(2));
         Assert.Equal(1, result.EmpId);
@@ -73,14 +79,14 @@ public class AttendanceServiceTests
     }
 
     [Fact]
-    public async Task CheckOutAsync_ShouldUseServerLocalTimeAndCalculateHours()
+    public async Task CheckOutAsync_ShouldUseBusinessLocalTimeAndCalculateHours()
     {
         var attendance = new Attendance
         {
             AttendanceId = 22,
             EmpId = 1,
-            CheckIn = DateTime.Now.AddHours(-2),
-            AttendanceDate = DateTime.Now.Date,
+            CheckIn = GetBusinessNow().AddHours(-2),
+            AttendanceDate = GetBusinessNow().Date,
             Employee = new Employee
             {
                 FirstName = "Test",
@@ -98,7 +104,7 @@ public class AttendanceServiceTests
         _unitOfWorkMock.Setup(x => x.SaveChangesAsync())
             .ReturnsAsync(1);
 
-        var start = DateTime.Now;
+        var start = GetBusinessNow();
 
         var result = await _attendanceService.CheckOutAsync(new CheckoutAttendanceDto
         {
@@ -106,10 +112,31 @@ public class AttendanceServiceTests
             CheckOut = DateTime.UtcNow
         });
 
-        var end = DateTime.Now;
+        var end = GetBusinessNow();
 
         Assert.InRange(result.CheckOut!.Value, start.AddSeconds(-2), end.AddSeconds(2));
         Assert.InRange(result.TotalHours, 1.9, 2.1);
         Assert.Equal(1, result.EmpId);
+    }
+
+    private static DateTime GetBusinessNow()
+    {
+        foreach (var timeZoneId in BusinessTimeZoneIds)
+        {
+            try
+            {
+                var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+            }
+            catch (InvalidTimeZoneException)
+            {
+            }
+        }
+
+        return DateTime.UtcNow;
     }
 }
